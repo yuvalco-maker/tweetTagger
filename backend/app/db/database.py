@@ -38,5 +38,7 @@ tagged_collection = db.get_collection("learning_data")
 untagged_collection = db.get_collection("untagged_tweets")
 processed_collection = db.get_collection("processed_phase_II")
 users_collection = db.get_collection("users_phase_II")
+mock_collection = db.get_collection("working")
+
 
 password_reset_tokens_collection = db.get_collection("reset_password_tokens")

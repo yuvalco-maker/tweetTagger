@@ -19,21 +19,6 @@ class TweetSchema(BaseModel):
     )
 
 
-class MLTageedTweet(BaseModel):
-    id: Optional[str] = Field(None, alias="_id")
-    uploaded_by: str
-    content: str
-    created_at: datetime
-    is_dangerous: Optional[bool] = None
-    category: Optional[str] = None
-
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True,
-        populate_by_name=True,
-        extra="ignore",
-    )
-
-
 class TweetinDB(TweetSchema):
     status: str = "pending"
     locked_at: Optional[datetime] = None
