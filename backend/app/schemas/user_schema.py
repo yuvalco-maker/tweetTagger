@@ -1,17 +1,15 @@
 from datetime import datetime
-
-from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserInDB(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     username: str
     email: str
-    # Make password optional for Google users
     password: Optional[str] = None
     isADMIN: bool = False
-
     provider: str = "local"
     google_id: Optional[str] = None
     profile_pic: Optional[str] = None
