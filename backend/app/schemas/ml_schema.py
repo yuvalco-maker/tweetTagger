@@ -8,7 +8,7 @@ class PredictionResult(BaseModel):
     category: str
 
 
-class MLTageedTweet(BaseModel):
+class MLTaggedTweet(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     uploaded_by: str
     content: str

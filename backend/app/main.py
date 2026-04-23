@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.controller.users_controller import auth_router, users_router
+from backend.app.controller.ml_controller import ml_router
 from backend.app.db.database import connect_to_mongo, close_mongo_connection
 
 load_dotenv()
@@ -40,6 +41,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(ml_router)
 
 
 @app.get("/health")
