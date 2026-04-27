@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel, Field
 
 from backend.app.dependencies.auth import get_current_user
 from backend.app.schemas.user_schema import createDefaultUser, createGoogleUser
@@ -7,10 +8,21 @@ from backend.app.services.users_services import (
     register_user_def,
     continue_with_google,
     login_user,
+    forgot_password,
+    reset_password,
 )
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 users_router = APIRouter(prefix="/users", tags=["Users"])
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str = Field(..., min_length=1)
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=1)
 
 
 @auth_router.post("/register")
@@ -47,10 +59,26 @@ async def on_continue_with_google(user_in: createGoogleUser):
         )
 
 
+@auth_router.post("/forgot-password")
+async def forgot_password_endpoint(request: ForgotPasswordRequest):
+    try:
+        return await forgot_password(request.email)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@auth_router.post("/reset-password")
+async def reset_password_endpoint(request: ResetPasswordRequest):
+    try:
+        return await reset_password(request.token, request.new_password)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @users_router.get("/me")
 async def get_me(current_user: dict = Depends(get_current_user)):
     return {
-        "user_id": current_user["_id"],
+        "user_id": str(current_user["_id"]),
         "username": current_user["username"],
         "email": current_user["email"],
         "isADMIN": current_user.get("isADMIN", False),

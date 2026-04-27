@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 
 from bson import ObjectId
 from dotenv import load_dotenv
@@ -7,13 +8,18 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from passlib.context import CryptContext
 
-from backend.app.db.database import users_collection
+from backend.app.db.database import users_collection, password_reset_tokens_collection
 from backend.app.schemas.user_schema import (
     UserResponse,
     createDefaultUser,
     createGoogleUser,
 )
-from backend.app.services.jwt_service import create_access_token
+from backend.app.services.email_service import send_reset_link
+from backend.app.services.jwt_service import (
+    create_access_token,
+    create_password_reset_token,
+    decode_password_reset_token,
+)
 
 load_dotenv()
 
@@ -65,6 +71,7 @@ async def register_user_def(user_in: createDefaultUser):
     existing_user = await users_collection.find_one(
         {"$or": [{"username": user_in.username}, {"email": user_in.email}]}
     )
+
     if existing_user:
         raise ValueError("User already exists")
 
@@ -92,6 +99,7 @@ async def login_user(username: str, password: str):
         )
 
     stored_password = user.get("password")
+
     if not stored_password:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -159,6 +167,7 @@ async def continue_with_google(user_in: createGoogleUser):
                     },
                 )
                 user = await users_collection.find_one({"_id": user["_id"]})
+
             else:
                 new_user = {
                     "google_id": google_id,
@@ -169,6 +178,7 @@ async def continue_with_google(user_in: createGoogleUser):
                     "password": None,
                     "isADMIN": False,
                 }
+
                 result = await users_collection.insert_one(new_user)
                 user = await users_collection.find_one({"_id": result.inserted_id})
 
@@ -195,3 +205,114 @@ async def continue_with_google(user_in: createGoogleUser):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid Google token",
         )
+
+
+async def forgot_password(email: str):
+    generic_message = {
+        "message": "If an account with that email exists, a reset link has been sent."
+    }
+
+    user = await users_collection.find_one({"email": email})
+
+    if not user:
+        return generic_message
+
+    # Google users have password=None, so they should keep using Google login.
+    if not user.get("password"):
+        return generic_message
+
+    user_id = str(user["_id"])
+    now = datetime.now(timezone.utc)
+
+    await password_reset_tokens_collection.update_many(
+        {"user_id": user_id, "used": False},
+        {
+            "$set": {
+                "used": True,
+                "used_at": now,
+            }
+        },
+    )
+
+    token, jti = create_password_reset_token(user_id)
+    payload = decode_password_reset_token(token)
+
+    reset_doc = {
+        "user_id": user_id,
+        "token_jti": jti,
+        "expires_at": datetime.fromtimestamp(payload["exp"], tz=timezone.utc),
+        "used": False,
+        "created_at": now,
+        "used_at": None,
+    }
+
+    await password_reset_tokens_collection.insert_one(reset_doc)
+
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    reset_link = f"{frontend_url}/reset-password?token={token}"
+
+    email_result = await send_reset_link(email, reset_link)
+
+    if email_result != "success":
+        raise ValueError(f"Failed to send reset email: {email_result}")
+
+    return generic_message
+
+
+async def reset_password(token: str, new_password: str):
+    payload = decode_password_reset_token(token)
+
+    user_id = payload["sub"]
+    jti = payload["jti"]
+
+    reset_record = await password_reset_tokens_collection.find_one(
+        {
+            "user_id": user_id,
+            "token_jti": jti,
+            "used": False,
+        }
+    )
+
+    if not reset_record:
+        raise ValueError("Invalid or already used reset token")
+
+    now = datetime.now(timezone.utc)
+
+    expires_at = reset_record["expires_at"]
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if expires_at < now:
+        raise ValueError("Reset token has expired")
+
+    try:
+        oid = ObjectId(user_id)
+    except Exception:
+        raise ValueError("Invalid user id in token")
+
+    user = await users_collection.find_one({"_id": oid})
+
+    if not user:
+        raise ValueError("User not found")
+
+    if not user.get("password"):
+        raise ValueError("This account uses Google sign-in. Please continue with Google.")
+
+    new_hashed_password = hash_password(new_password)
+
+    await users_collection.update_one(
+        {"_id": oid},
+        {"$set": {"password": new_hashed_password}},
+    )
+
+    await password_reset_tokens_collection.update_one(
+        {"_id": reset_record["_id"]},
+        {
+            "$set": {
+                "used": True,
+                "used_at": now,
+            }
+        },
+    )
+
+    return {"message": "Password has been reset successfully"}

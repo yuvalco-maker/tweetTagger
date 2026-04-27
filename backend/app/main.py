@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.controller.users_controller import auth_router, users_router
 from backend.app.controller.ml_controller import ml_router
 from backend.app.db.database import connect_to_mongo, close_mongo_connection
-
+from backend.app.controller.tweet_fetch_controller import tweet_fetch_router
 load_dotenv()
 
 
@@ -42,7 +42,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(ml_router)
-
+app.include_router(tweet_fetch_router)
 
 @app.get("/health")
 async def health():
