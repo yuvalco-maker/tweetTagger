@@ -1,0 +1,45 @@
+/* ErrorModal.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 70px;
+  /* Distance from top */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  /* Allows you to click things BEHIND the message */
+  z-index: 9999;
+}
+
+.modal-content {
+  pointer-events: auto;
+  /* Makes the Close button clickable again */
+  background-color: var(--modal-bg);
+  color: var(--error-txt);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  border: 2px solid light-dark(#dddddd, #333333);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Animation to make it slide down from the top */
+  animation: slideDown 0.3s ease-out;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 300px;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

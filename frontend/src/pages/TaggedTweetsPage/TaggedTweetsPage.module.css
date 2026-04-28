@@ -1,0 +1,119 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: transparent;
+  color: var(--text-color);
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding-top: 90px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--text-color);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item {
+  width: 100%;
+}
+
+.infoBox {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  opacity: 0.9;
+}
+
+.errorBox {
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.pageLabel {
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+/* Buttons - consistent with your Home style */
+.btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btnMid {
+  background-color: var(--tweeter-blue);
+  color: var(--btn-text);
+}
+
+.btnLight {
+  background-color: var(--accent-color);
+  color: var(--btn-text);
+  opacity: 0.8;
+}
+
+.btn:hover:enabled {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}

@@ -1,0 +1,125 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.mainWrapper {
+  margin-top: 100px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: var(--shadow-card);
+  width: min(900px, 95vw);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 40px 20px;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.scrollableContent {
+  width: 100%;
+}
+
+.sectionHeader {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-color);
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 10px;
+}
+
+.riskActions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.riskBtn {
+  flex: 1;
+  padding: 14px;
+  font-weight: 700;
+  border-radius: 12px !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  /* בסיס */
+  border: 2px solid transparent;
+}
+
+/* 👇 אפקט לחיצה (כולם) */
+.riskBtn:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2) inset;
+}
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.catCard {
+  background: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.05));
+  border: 2px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 18px 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Highlighted state */
+.active {
+  background-color: transparent !important; /* ❌ בלי מילוי */
+  
+  border: 2px solid var(--selected-cat-bg) !important; /* ✅ מסגרת כחולה */
+  color: var(--selected-cat-bg) !important;
+
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.05),
+              0 0 6px var(--selected-cat-bg);
+
+  transform: translateY(1px);
+}
+
+.navActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.navActions button {
+  flex: 1;
+}
+
+.safe {
+  background-color: var(--safe);
+  border-color: var(--safe);
+  color: white;
+}
+
+.danger {
+  background-color: var(--risk-high);
+  border-color: var(--risk-high);
+  color: white;
+}
+
+.escalate {
+  background-color: var(--escalate);
+  border-color: var(--escalate);
+  color: white;
+}

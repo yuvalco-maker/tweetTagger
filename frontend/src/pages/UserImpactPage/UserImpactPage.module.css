@@ -1,0 +1,283 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainWrapper {
+  width: min(1100px, 92vw);
+  margin-top: 100px;
+  margin-bottom: 32px;
+  background: var(--card-bg);
+  padding: 28px;
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-sizing: border-box;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--text-color);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--nav-text);
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.backBtn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  font-weight: 600;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.backBtn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.stateBox {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--surface-2, var(--modal-bg));
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  padding: 20px;
+  color: var(--text-color);
+}
+
+.summaryCard {
+  background: var(--surface-2, var(--modal-bg));
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summaryStat {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.summaryLabel {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-color);
+}
+
+.summaryValue,
+.summaryValueDanger,
+.summaryValueSafe {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.summaryValue {
+  color: var(--text-color);
+}
+
+.summaryValueDanger {
+  color: var(--danger);
+}
+
+.summaryValueSafe {
+  color: var(--safe);
+}
+
+.summarySubText {
+  font-size: 0.95rem;
+  color: var(--nav-text);
+  opacity: 0.82;
+}
+
+.bucketGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.bucketCard {
+  padding: 24px;
+  border-radius: 26px;
+  color: #ffffff;
+  min-height: 250px;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-card);
+}
+
+.dangerCard {
+  background: linear-gradient(180deg, #7b231d 0%, #47100d 100%);
+}
+
+.safeCard {
+  background: linear-gradient(180deg, #1f5b46 0%, #103126 100%);
+}
+
+.bucketHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.bucketTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.bucketSubtitle {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.35;
+}
+
+.bucketCount {
+  min-width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+}
+
+.categoryList {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.categoryPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.categoryName {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.categoryCount {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.emptyMiniText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bucketGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainWrapper {
+    width: min(94vw, 94vw);
+    padding: 18px;
+    border-radius: 22px;
+    margin-top: 90px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .summaryStat {
+    min-height: 126px;
+  }
+
+  .summaryValue,
+  .summaryValueDanger,
+  .summaryValueSafe {
+    font-size: 2rem;
+  }
+
+  .bucketCard {
+    padding: 18px;
+    min-height: 220px;
+  }
+
+  .bucketCount {
+    min-width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
+  }
+}

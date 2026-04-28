@@ -1,122 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import EscalatedTweetsPage from "./pages/EscalatedTweetsPage/EscalatedTweetsPage";
+import Login from "./pages/login/login";
+import Register from "./pages/register/register";
+import Home from "./pages/home/Home";
+import HomeUser from "./pages/home/HomeUser";
+import AdminTaggingDistributionPage from "./pages/AdminTaggingDistributionPage/AdminTaggingDistributionPage";
+import TweetsPage from "./pages/tweets/TweetsPage";
+import TaggedTweetsPage from "./pages/TaggedTweetsPage/TaggedTweetsPage"; 
+import EscalationTagPage from "./pages/EscalationTagPage/EscalationTagPage";
+import TaggingLeaderboardPage from "./pages/TaggingLeaderboardPage/TaggingLeaderboardPage"
+import MyTaggedTweetsPage from "./pages/MyTaggedTweetsPage/MyTaggedTweetsPage"
+import EditTweetPage from "./pages/EditTweetPage/EditTweetPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage/ResetPasswordPage.jsx";
+import "./index.css";
+import AdminDailyTaggingStatsPage from "./pages/AdminDailyTaggingStatsPage/AdminDailyTaggingStatsPage";
+import UserImpactPage from "./pages/UserImpactPage/UserImpactPage";
+import AdminUserInsightsPage from "./pages/AdminUserInsightsPage/AdminUserInsightsPage";
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <Router>
+      <div className="app-wraper">
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
 
-      <div className="ticks"></div>
+          <Route path="/login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          {}
+          <Route path="/home" element={<Home />} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {}
+          <Route path="/tweets" element={<TweetsPage />} />
+
+          {}
+          <Route path="/tagged-tweets" element={<TaggedTweetsPage />} />
+
+          {}
+          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/escalation" element={<EscalatedTweetsPage />} />
+          <Route path="/escalation-tag" element={<EscalationTagPage />} />
+           <Route path="/table" element={<TaggingLeaderboardPage />} />
+            <Route path="/tags" element={<MyTaggedTweetsPage/>} />
+            <Route path="/edit-tweet" element={<EditTweetPage />} />
+                          <Route path="/home-user" element={<HomeUser />} />
+                            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                            <Route path="/reset-password" element={<ResetPasswordPage />} />
+                            <Route path="/admin-daily-stats" element={<AdminDailyTaggingStatsPage />} />
+                            <Route path="/admin-tagging-distribution" element={<AdminTaggingDistributionPage />} />
+                            <Route path="/my-impact" element={<UserImpactPage />} />
+                            <Route path="/admin-user-insights" element={<AdminUserInsightsPage />} />
+
+
+            
+    
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;

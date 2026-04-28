@@ -1,0 +1,481 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainWrapper {
+  width: min(1200px, 92vw);
+  margin-top: 100px;
+  margin-bottom: 32px;
+  background: var(--card-bg);
+  padding: 28px;
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-sizing: border-box;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  color: var(--text-color);
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: var(--nav-text);
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.backBtn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  font-weight: 600;
+}
+
+.searchCard,
+.sectionCard {
+  background: var(--surface-2, var(--modal-bg));
+  border: 1px solid var(--border-soft);
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.searchLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.searchBoxWrap {
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border-soft);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.searchHint {
+  margin-top: 8px;
+  color: var(--nav-text);
+  font-size: 0.9rem;
+}
+
+.suggestionsBox {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.suggestionItem {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+.suggestionItem:hover {
+  background: var(--surface-2, var(--modal-bg));
+}
+
+.suggestionUsername {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.suggestionEmail {
+  color: var(--nav-text);
+  font-size: 0.9rem;
+}
+
+.selectedUserBox {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.selectedUserTitle {
+  color: var(--nav-text);
+  font-weight: 600;
+}
+
+.selectedUserValue {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.selectedUserEmail {
+  color: var(--nav-text);
+}
+
+.stateBox,
+.emptyInnerBox {
+  min-height: 140px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--surface-2, var(--modal-bg));
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  padding: 20px;
+  color: var(--text-color);
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.sectionHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.paginationInfo {
+  color: var(--nav-text);
+  font-size: 0.95rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summaryStat {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 20px;
+  min-height: 160px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+}
+.summaryLabel {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-color);
+}
+
+.summaryValue,
+.summaryValueDanger,
+.summaryValueSafe {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.summaryValue {
+  color: var(--text-color);
+}
+
+.summaryValueDanger {
+  color: var(--danger);
+}
+
+.summaryValueSafe {
+  color: var(--safe);
+}
+
+.summarySubText {
+  font-size: 0.92rem;
+  color: var(--nav-text);
+  opacity: 0.82;
+}
+
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.impactBucket {
+  padding: 22px;
+  border-radius: 26px;
+  color: #ffffff;
+  min-height: 240px;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-card);
+}
+
+.dangerCard {
+  background: linear-gradient(180deg, #7b231d 0%, #47100d 100%);
+}
+
+.safeCard {
+  background: linear-gradient(180deg, #1f5b46 0%, #103126 100%);
+}
+
+.bucketHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.bucketTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.bucketSubtitle {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.bucketCount {
+  min-width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.bucketBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.categoryList {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.categoryPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.categoryName {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.categoryCount {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.emptyMiniText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.92rem;
+}
+
+.dailyChartWrap {
+  overflow-x: auto;
+}
+
+.dailyBars {
+  min-height: 260px;
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  min-width: max-content;
+  padding: 8px 0 0;
+}
+
+.barItem {
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.barValue {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.bar {
+  width: 100%;
+  border-radius: 18px 18px 10px 10px;
+  background: linear-gradient(
+    to top,
+    var(--accent-color),
+    var(--tweeter-blue)
+  );
+  min-height: 12px;
+}
+
+.barLabel {
+  width: 100%;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--nav-text);
+  word-break: break-word;
+}
+
+.tweetsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tweetCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.tweetMetaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tweetDate,
+.tweetTagger {
+  color: var(--nav-text);
+  font-size: 0.9rem;
+}
+
+.tweetContent {
+  margin: 0 0 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.tweetBadges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2, var(--modal-bg));
+  color: var(--text-color);
+  font-size: 0.85rem;
+}
+
+.paginationRow {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pageBtn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+}
+
+.pageBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 950px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .impactGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainWrapper {
+    width: min(94vw, 94vw);
+    padding: 18px;
+    border-radius: 22px;
+    margin-top: 90px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .barItem {
+    width: 72px;
+  }
+}

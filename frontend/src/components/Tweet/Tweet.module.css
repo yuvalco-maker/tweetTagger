@@ -1,0 +1,56 @@
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 32px 36px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 850px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  /* Ensures the card doesn't grow indefinitely */
+  max-height: 250px;
+}
+
+.date {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-bottom: 14px;
+  color: var(--text-color);
+  flex-shrink: 0;
+  /* Keeps the date visible */
+}
+
+/* NEW: Scroll Container Logic */
+.scrollContainer {
+  width: 100%;
+  overflow-y: auto;
+  /* Forces scrollbar when text is too long */
+  padding-right: 10px;
+  /* Space for the scrollbar */
+
+  /* Custom Scrollbar for Night/Day mode */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-soft) transparent;
+}
+
+/* Chrome, Edge, and Safari scrollbar styling */
+.scrollContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background-color: var(--border-soft);
+  border-radius: 10px;
+}
+
+.content {
+  font-size: 19px;
+  line-height: 1.8;
+  color: var(--text-color);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+
+}

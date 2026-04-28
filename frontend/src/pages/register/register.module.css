@@ -1,0 +1,55 @@
+.register-card {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 2.5rem;
+    border-radius: 24px;
+    display: grid;
+    gap: 1.5rem;
+    /* Single column layout for stacked registration */
+    grid-template-columns: 1fr 1fr; 
+    grid-template-areas: 
+        "title title"
+        "user user"
+        "email email"
+        "pass pass"
+        "link reg";
+    width: 100%;
+    max-width: 400px;
+}
+
+form { display: contents; }
+
+.login-header { 
+    grid-area: title; 
+    justify-self: center; 
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.username-input { grid-area: user; grid-column: 1 / -1; }
+.email-input { grid-area: email; grid-column: 1 / -1; }
+.password-input { grid-area: pass; grid-column: 1 / -1; }
+
+.btn-reg { 
+    grid-area: reg; 
+    
+}
+
+.footer-text {
+    grid-area: link;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.signin-link {
+    color: var(--tweeter-blue);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.3rem;
+}
+
+.signin-link:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,72 @@
+/* login.module.css */
+
+.login-card {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 2.5rem;
+    border-radius: 24px;
+    display: grid;
+    gap: 1.5rem;
+    /* Two-column structure: Left for link, Right for button */
+    grid-template-columns: 1fr 1fr; 
+    grid-template-areas: 
+        "title title"
+        "user  user"
+        "pass  pass"
+        "reg   sub";
+    width: 100%;
+    max-width: 400px;
+    align-items: center; /* Vertically aligns items in the row */
+}
+
+form { display: contents; }
+
+.login-header { 
+    grid-area: title; 
+    justify-self: center; 
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.username-input { 
+    grid-area: user; 
+    grid-column: span 2; 
+}
+
+.password-input { 
+    grid-area: pass; 
+    grid-column: span 2; 
+}
+
+.reg-container { 
+    grid-area: reg; 
+    font-size: 0.85rem;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    /* FIX: Changed from flex-start to center */
+    align-items: center; 
+    text-align: center;
+}
+
+.signup-link {
+    color: var(--tweeter-blue);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    display: inline-block; /* Helps with padding/spacing if needed */
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+    filter: brightness(1.2);
+    /* Subtle scale effect for a "better" look */
+    transform: translateY(-1px);
+}
+
+.btn-sub { 
+    grid-area: sub; 
+    width: 100%; 
+}
