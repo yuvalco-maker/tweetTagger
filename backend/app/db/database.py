@@ -4,22 +4,27 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 
+# --------------------------------------------------
+# Load env
+# --------------------------------------------------
 env_path = Path(__file__).resolve().parent.parent.parent / ".env"
 
 if env_path.exists():
-    # Local: Use the file on your machine
     load_dotenv(dotenv_path=env_path)
 else:
-    # AWS: Use the variables you typed into the App Runner Console
     load_dotenv()
-# the connection object
-client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
 
-# db refers to the spacific database in the cluster
+
+# --------------------------------------------------
+# Mongo connection
+# --------------------------------------------------
+client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
 db = client.tweet_tag_database
 
 
-# uses ping to make sure the client was created seccessfully
+# --------------------------------------------------
+# Connection check
+# --------------------------------------------------
 async def connect_to_mongo():
     try:
         await client.admin.command("ping")
@@ -34,6 +39,9 @@ async def close_mongo_connection():
     client.close()
 
 
+# --------------------------------------------------
+# Collections (existing)
+# --------------------------------------------------
 tagged_collection = db.get_collection("learning_data")
 untagged_collection = db.get_collection("untagged_tweets")
 processed_collection = db.get_collection("processed_phase_II")
@@ -41,4 +49,19 @@ users_collection = db.get_collection("users_phase_II")
 mock_collection = db.get_collection("working")
 
 
-password_reset_tokens_collection = db.get_collection("reset_password_tokens")
+# --------------------------------------------------
+# 🔐 Auth
+# --------------------------------------------------
+password_reset_tokens_collection = db.get_collection("password_reset_tokens")
+
+
+# --------------------------------------------------
+# 🔥 NEW - Tweets for model app
+# --------------------------------------------------
+tweets_collection = db.get_collection("tweets")
+
+
+# --------------------------------------------------
+# 🔥 NEW - Query history (very important)
+# --------------------------------------------------
+tweet_search_queries_collection = db.get_collection("tweet_search_queries")

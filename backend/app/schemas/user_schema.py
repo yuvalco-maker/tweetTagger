@@ -10,6 +10,7 @@ class UserInDB(BaseModel):
     email: str
     password: Optional[str] = None
     isADMIN: bool = False
+
     provider: str = "local"
     google_id: Optional[str] = None
     profile_pic: Optional[str] = None
