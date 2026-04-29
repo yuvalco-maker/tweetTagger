@@ -4,24 +4,29 @@
 
 .input-wrapper input {
   width: 100%;
-  padding: 0.875rem 1.1rem;
+  padding: 0.8rem 1.05rem;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md, 12px);
   color: var(--text-color);
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  outline: none;
 }
 
 .input-wrapper input::placeholder {
   color: var(--text-muted);
-  opacity: 0.85;
+  opacity: 0.75;
 }
 
 .input-wrapper input:focus {
-  outline: none;
   border-color: var(--input-focus-border);
   background: var(--input-focus-bg);
   box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.input-wrapper input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }

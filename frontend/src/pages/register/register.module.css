@@ -1,5 +1,5 @@
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -10,12 +10,12 @@
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid var(--card-border-color);
-  border-radius: 24px;
+  border-radius: 26px;
   padding: 2.75rem 2.5rem 2.25rem;
   box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
   display: flex;
   flex-direction: column;
-  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .logo-mark {
@@ -27,13 +27,13 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.45);
+  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.40);
 }
 
 .register-header {
   text-align: center;
   color: var(--text-color);
-  font-size: 1.85rem;
+  font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   margin: 0 0 0.35rem;
@@ -43,8 +43,9 @@
 .register-subtitle {
   text-align: center;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   margin: 0 0 2rem;
+  line-height: 1.5;
 }
 
 .fields {
@@ -61,7 +62,7 @@
 
 .footer-text {
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   margin: 0;
 }
@@ -71,10 +72,10 @@
   font-weight: 600;
   text-decoration: none;
   margin-left: 0.3rem;
-  transition: opacity 0.15s ease;
+  transition: opacity 150ms ease;
 }
 
 .signin-link:hover {
-  opacity: 0.7;
+  opacity: 0.70;
   text-decoration: none;
 }

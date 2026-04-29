@@ -1,0 +1,323 @@
+/* ─── Search Query form ─────────────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card {
+  width: 100%;
+  max-width: 920px;
+  background: var(--card-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 2.75rem 3rem;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+}
+
+/* ─── Back link ───────────────────────────────────────────────────*/
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 1.75rem;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+/* ─── Page heading ────────────────────────────────────────────────*/
+.title {
+  margin: 0 0 0.45rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0 0 2.5rem;
+  line-height: 1.65;
+  font-size: 0.875rem;
+  max-width: 640px;
+}
+
+/* ─── Form layout ─────────────────────────────────────────────────*/
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Each visual section gets a separator + left-accent */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1.75rem 0 1.75rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  margin-left: 0.25rem;
+  margin-bottom: 0;
+  transition: border-color 200ms ease;
+}
+
+.section:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+/* The grid section (Language + Max tweets) isn't a .section, treat differently */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 1.75rem 0 1.75rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  margin-left: 0.25rem;
+  transition: border-color 200ms ease;
+}
+
+.grid:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+/* ─── Labels ──────────────────────────────────────────────────────*/
+.label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────*/
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.925rem;
+  font-family: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+  background: var(--input-focus-bg);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Keyword rows ────────────────────────────────────────────────*/
+.keywordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keywordRow {
+  display: flex;
+  gap: 8px;
+}
+
+.removeButton {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.removeButton:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(239, 68, 68, 0.32);
+  color: #ef4444;
+}
+
+.removeButton:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  width: fit-content;
+  padding: 7px 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: transparent;
+  color: var(--text-color);
+  font-family: inherit;
+  transition: all 150ms ease;
+}
+
+.secondaryButton:hover:not(:disabled) {
+  background: var(--brand-subtle);
+  border-color: var(--brand-border);
+  color: #1DA1F2;
+}
+
+.secondaryButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+/* ─── Time-range buttons ──────────────────────────────────────────*/
+.rangeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rangeButton {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: all 150ms ease;
+}
+
+.rangeButton:hover:not(:disabled) {
+  border-color: rgba(29, 161, 242, 0.38);
+  color: #1DA1F2;
+  background: rgba(29, 161, 242, 0.07);
+}
+
+.rangeButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.activeRangeButton {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 2px solid #1DA1F2;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: rgba(13, 108, 92, 0.12);
+  color: #1DA1F2;
+  font-family: inherit;
+  transition: all 150ms ease;
+}
+
+.activeRangeButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Submit ──────────────────────────────────────────────────────*/
+.submitButton {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.975rem;
+  font-weight: 800;
+  font-family: inherit;
+  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(29, 161, 242, 0.38);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 150ms ease;
+  letter-spacing: 0.01em;
+  margin-top: 1.75rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.52);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitButton:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Status message ──────────────────────────────────────────────*/
+.message {
+  margin-top: 1.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding: 0.75rem 1.1rem;
+  background: var(--surface-3);
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  line-height: 1.4;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────*/
+@media (max-width: 720px) {
+  .page {
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section,
+  .grid {
+    padding-left: 1rem;
+  }
+}

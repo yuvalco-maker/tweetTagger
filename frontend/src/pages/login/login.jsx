@@ -36,22 +36,35 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const saveUserAndGoHome = (data, fallbackUsername = "") => {
+    if (data?.access_token) {
+      localStorage.setItem("token", data.access_token);
+    }
+
+    localStorage.setItem("username", data?.username || fallbackUsername);
+    localStorage.setItem("isADMIN", String(toBoolean(data?.isADMIN)));
+
+    navigate("/home");
+  };
+
   const handleGoogleCredential = async (googleResponse) => {
     const serverUrl =
-      import.meta.env.VITE_SERVER_URL || "https://em5epzymak.eu-west-3.awsapprunner.com";
+      import.meta.env.VITE_SERVER_URL ||
+      "https://em5epzymak.eu-west-3.awsapprunner.com";
+
     setLoading(true);
+
     try {
       const response = await fetch(`${serverUrl}/auth/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: googleResponse.credential }),
       });
+
       const data = await response.json().catch(() => ({}));
+
       if (response.ok) {
-        if (data?.access_token) localStorage.setItem("token", data.access_token);
-        localStorage.setItem("username", data?.username || "");
-        localStorage.setItem("isADMIN", String(toBoolean(data?.isADMIN)));
-        navigate(toBoolean(data?.isADMIN) ? "/home" : "/home-user");
+        saveUserAndGoHome(data);
       } else {
         const msg = Array.isArray(data?.detail)
           ? data.detail?.[0]?.msg || "Google login failed."
@@ -74,6 +87,7 @@ export default function Login() {
         client_id: clientId,
         callback: handleGoogleCredential,
       });
+
       if (googleBtnRef.current) {
         window.google.accounts.id.renderButton(googleBtnRef.current, {
           theme: "outline",
@@ -92,7 +106,9 @@ export default function Login() {
     }
 
     return () => {
-      if (window.onGoogleLibraryLoad === init) window.onGoogleLibraryLoad = undefined;
+      if (window.onGoogleLibraryLoad === init) {
+        window.onGoogleLibraryLoad = undefined;
+      }
     };
   }, []);
 
@@ -106,7 +122,9 @@ export default function Login() {
     if (!password) return triggerError("Please fill in your password");
 
     const serverUrl =
-      import.meta.env.VITE_SERVER_URL || "https://em5epzymak.eu-west-3.awsapprunner.com";
+      import.meta.env.VITE_SERVER_URL ||
+      "https://em5epzymak.eu-west-3.awsapprunner.com";
+
     const url = `${serverUrl}/auth/login`;
 
     setLoading(true);
@@ -121,20 +139,14 @@ export default function Login() {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        if (data?.access_token) {
-          localStorage.setItem("token", data.access_token);
-        }
-        localStorage.setItem("username", data?.username || username);
-        const isAdmin = toBoolean(data?.isADMIN);
-        localStorage.setItem("isADMIN", String(isAdmin));
-        navigate(isAdmin ? "/home" : "/home-user");
+        saveUserAndGoHome(data, username);
       } else {
         const errorMsg = Array.isArray(data?.detail)
           ? data.detail?.[0]?.msg || "Login failed."
           : data?.detail || "Login failed.";
         triggerError(errorMsg);
       }
-    } catch (err) {
+    } catch {
       triggerError(`Could not connect to the server (${url}).`);
     } finally {
       setLoading(false);
@@ -155,7 +167,7 @@ export default function Login() {
         </div>
 
         <h1 className={styles["login-header"]}>Welcome back</h1>
-        <p className={styles["login-subtitle"]}>Sign in to TweetTag</p>
+        <p className={styles["login-subtitle"]}>Sign in to Tweet-Tagger</p>
 
         <form
           onSubmit={(e) => {
@@ -171,6 +183,7 @@ export default function Login() {
               onChange={handleChange}
               autoComplete="username"
             />
+
             <Input
               name="password"
               type="password"
@@ -203,7 +216,9 @@ export default function Login() {
 
         <p className={styles["reg-container"]}>
           Don't have an account?
-          <Link to="/register" className={styles["signup-link"]}>Sign up</Link>
+          <Link to="/register" className={styles["signup-link"]}>
+            Sign up
+          </Link>
         </p>
       </div>
 

@@ -6,6 +6,9 @@ from backend.app.services.tweet_fetch_service import (
     fetch_tweets_from_apify,
     get_my_fetched_tweets,
     get_my_search_queries,
+    get_my_tweets_by_query,
+    get_queries_by_username,
+    get_global_processed_stats,
 )
 
 tweet_fetch_router = APIRouter(
@@ -53,6 +56,44 @@ async def get_my_queries(
 ):
     try:
         return await get_my_search_queries(current_user, limit)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+@tweet_fetch_router.get("/query/{query_id}/tweets")
+async def get_query_tweets(
+    query_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_my_tweets_by_query(current_user, query_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+@tweet_fetch_router.get("/user-queries")
+async def get_user_queries(
+    username: str = Query(..., min_length=1),
+    limit: int = Query(default=50, ge=1, le=200),
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_queries_by_username(username, limit)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+@tweet_fetch_router.get("/global-processed-stats")
+async def get_global_stats(
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_global_processed_stats()
     except Exception as e:
         raise HTTPException(
             status_code=500,

@@ -1,24 +1,72 @@
-from backend.app.schemas.ml_schema import MLTaggedTweet
+from backend.app.db.database import tweets_collection, processed_collection
 from backend.app.services.ml.mock_predictor import predict_from_text_mock
+from backend.app.schemas.ml_schema import MLTaggedTweet
 from backend.app.services.tweet_services import getTweetFromCollection
-from backend.app.db.database import processed_collection, mock_collection
 
 
-async def predict_tweet_by_id(tweet_id, collection):
-
+async def predict_tweet_by_id(tweet_id: str, collection=tweets_collection):
     tweet = await getTweetFromCollection(tweet_id, collection)
 
-    text = tweet["content"]
+    prediction = predict_from_text_mock(tweet["content"])
 
-    prediction = predict_from_text_mock(text)
+    await collection.update_one(
+        {"_id": tweet["_id"]},
+        {
+            "$set": {
+                "is_dangerous": prediction.is_dangerous,
+                "category": prediction.category,
+                "status": "ml_tagged",
+            }
+        },
+    )
 
     tweet["is_dangerous"] = prediction.is_dangerous
     tweet["category"] = prediction.category
+    tweet["status"] = "ml_tagged"
     tweet["_id"] = str(tweet["_id"])
 
-    ml_tweet = MLTaggedTweet(**tweet)
-    data = ml_tweet.dict(by_alias=True)
+    data = MLTaggedTweet(**tweet).model_dump(by_alias=True)
     data.pop("_id", None)
+
     res = await processed_collection.insert_one(data)
     data["_id"] = str(res.inserted_id)
+
     return MLTaggedTweet(**data)
+
+
+async def predict_tweets_by_query(query_id: str):
+    cursor = tweets_collection.find({
+        "query_id": query_id,
+        "is_dangerous": None,
+    })
+
+    results = []
+
+    async for tweet in cursor:
+        prediction = predict_from_text_mock(tweet["content"])
+
+        await tweets_collection.update_one(
+            {"_id": tweet["_id"]},
+            {
+                "$set": {
+                    "is_dangerous": prediction.is_dangerous,
+                    "category": prediction.category,
+                    "status": "ml_tagged",
+                }
+            },
+        )
+
+        tweet["is_dangerous"] = prediction.is_dangerous
+        tweet["category"] = prediction.category
+        tweet["status"] = "ml_tagged"
+        tweet["_id"] = str(tweet["_id"])
+
+        data = MLTaggedTweet(**tweet).model_dump(by_alias=True)
+        data.pop("_id", None)
+
+        res = await processed_collection.insert_one(data)
+        data["_id"] = str(res.inserted_id)
+
+        results.append(MLTaggedTweet(**data))
+
+    return results

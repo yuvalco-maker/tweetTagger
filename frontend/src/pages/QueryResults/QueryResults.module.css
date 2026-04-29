@@ -1,0 +1,89 @@
+/* ─── Query Results ─────────────────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  padding: 0 0 48px;
+}
+
+/* ─── Sticky-ish page header panel ───────────────────────────────*/
+.header {
+  width: 100%;
+  padding: 28px 40px 24px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  margin: 8px 0 4px;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ─── Back link ───────────────────────────────────────────────────*/
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+/* ─── Error / info message ────────────────────────────────────────*/
+.message {
+  max-width: 1100px;
+  margin: 0 auto 20px;
+  padding: 0 40px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ─── Tweet list ──────────────────────────────────────────────────*/
+.list {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────*/
+@media (max-width: 720px) {
+  .header {
+    padding: 20px 20px 18px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .message,
+  .list {
+    padding: 0 20px;
+  }
+}

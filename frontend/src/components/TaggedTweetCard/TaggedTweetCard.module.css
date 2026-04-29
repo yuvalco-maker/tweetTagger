@@ -1,11 +1,19 @@
 .card {
   width: 100%;
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--card-border-color);
   border-radius: 18px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-card);
+  background: var(--card-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-soft);
   color: var(--text-color);
-  padding: 18px;
+  padding: 20px;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-pop);
+  transform: translateY(-2px);
 }
 
 .topRow {
@@ -23,94 +31,104 @@
 }
 
 .author {
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.925rem;
   display: flex;
   gap: 8px;
   align-items: baseline;
   min-width: 0;
+  color: var(--text-color);
 }
 
 .username {
-  opacity: 0.8;
+  color: var(--text-muted);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .date {
-  font-size: 0.85rem;
-  opacity: 0.75;
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 .metaRight {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .badge {
-  padding: 6px 10px;
+  padding: 4px 12px;
   border-radius: 999px;
-  border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.04);
-  font-size: 0.85rem;
+  border: 1px solid rgba(29, 161, 242, 0.22);
+  background: rgba(29, 161, 242, 0.12);
+  color: #1DA1F2;
+  font-size: 0.78rem;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .link {
-  font-size: 0.9rem;
+  font-size: 0.825rem;
   text-decoration: none;
-  color: var(--accent-color);
+  color: #1DA1F2;
   font-weight: 600;
+  transition: opacity 150ms ease;
 }
 
 .link:hover {
-  opacity: 0.9;
+  opacity: 0.75;
+  text-decoration: none;
 }
 
 .text {
-  margin-top: 12px;
-  font-size: 1rem;
-  line-height: 1.5;
+  margin-top: 14px;
+  font-size: 0.925rem;
+  line-height: 1.65;
   white-space: pre-wrap;
   word-break: break-word;
+  color: var(--text-color);
 }
 
 .divider {
-  margin: 14px 0;
+  margin: 16px 0;
   height: 1px;
   background: var(--border-soft);
-  opacity: 0.7;
 }
 
 .tagsRow {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 14px;
+  gap: 8px 12px;
 }
 
 .tagItem {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 9px 13px;
+  border-radius: 11px;
   border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-3);
+  transition: background 150ms ease;
 }
 
 .label {
-  font-size: 0.85rem;
-  opacity: 0.75;
+  font-size: 0.78rem;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .value {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text-color);
 }
