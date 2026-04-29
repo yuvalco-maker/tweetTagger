@@ -1,20 +1,14 @@
 import React, { useState } from "react";
-import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Input from "../../components/Input/Input.jsx";
 import Button from "../../components/Button/Button.jsx";
 import ThemeToggle from "../../components/ThemeToggle/ThemeToggle.jsx";
-import styles from "./ResetPasswordPage.module.css";
+import styles from "./ForgotPasswordPage.module.css";
 
-export default function ResetPasswordPage() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  const token = searchParams.get("token") || "";
-
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const serverUrl =
@@ -24,28 +18,24 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     setError("");
 
-    if (!token) return setError("No reset token found. Please use the link from your email.");
-    if (!newPassword.trim()) return setError("Please enter a new password.");
-    if (newPassword.length < 6) return setError("Password must be at least 6 characters.");
-    if (newPassword !== confirmPassword) return setError("Passwords do not match.");
+    if (!email.trim()) return setError("Please enter your email address.");
 
     setLoading(true);
     try {
-      const response = await fetch(`${serverUrl}/auth/reset-password`, {
+      const response = await fetch(`${serverUrl}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, new_password: newPassword }),
+        body: JSON.stringify({ email: email.trim() }),
       });
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setError(data?.detail || "Failed to reset password.");
+        setError(data?.detail || "Something went wrong. Please try again.");
         return;
       }
 
-      setSuccess(true);
-      setTimeout(() => navigate("/login"), 2000);
+      setSubmitted(true);
     } catch {
       setError("Could not connect to the server.");
     } finally {
@@ -59,41 +49,36 @@ export default function ResetPasswordPage() {
         <ThemeToggle />
       </div>
 
-      <div className={styles["reset-card"]}>
+      <div className={styles["forgot-card"]}>
         <div className={styles["logo-mark"]} aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="white" width="26" height="26">
             <path d="M23.954 4.569a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.691 8.094 4.066 6.13 1.64 3.161a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.061a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548l-.047-.02z" />
           </svg>
         </div>
 
-        {success ? (
+        {submitted ? (
           <div className={styles["success-state"]}>
-            <div className={styles["success-icon"]}>✓</div>
-            <h1 className={styles["reset-header"]}>Password updated</h1>
-            <p className={styles["reset-subtitle"]}>Redirecting you to sign in…</p>
+            <h1 className={styles["forgot-header"]}>Check your email</h1>
+            <p className={styles["forgot-subtitle"]}>
+              If an account with <strong>{email}</strong> exists, we've sent a password reset link. Check your inbox.
+            </p>
           </div>
         ) : (
           <>
-            <h1 className={styles["reset-header"]}>Set new password</h1>
-            <p className={styles["reset-subtitle"]}>Must be at least 6 characters.</p>
+            <h1 className={styles["forgot-header"]}>Forgot password?</h1>
+            <p className={styles["forgot-subtitle"]}>
+              Enter your email and we'll send you a reset link.
+            </p>
 
             <form onSubmit={handleSubmit}>
               <div className={styles["fields"]}>
                 <Input
-                  name="newPassword"
-                  type="password"
-                  value={newPassword}
-                  placeholder="New password"
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  autoComplete="new-password"
-                />
-                <Input
-                  name="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  placeholder="Confirm new password"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  autoComplete="new-password"
+                  name="email"
+                  type="email"
+                  value={email}
+                  placeholder="Email address"
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                 />
               </div>
 
@@ -105,7 +90,7 @@ export default function ResetPasswordPage() {
                 variant="primary"
                 disabled={loading}
               >
-                {loading ? "Updating…" : "Reset password"}
+                {loading ? "Sending…" : "Send reset link"}
               </Button>
             </form>
           </>
