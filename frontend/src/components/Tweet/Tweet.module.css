@@ -1,43 +1,36 @@
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border-color);
   border-radius: 18px;
-  padding: 32px 36px;
-  margin: 10px 0;
+  padding: 22px 26px;
+  margin: 8px 0;
   width: 100%;
   max-width: 850px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
-  /* Ensures the card doesn't grow indefinitely */
   max-height: 250px;
 }
 
 .date {
-  font-size: 14px;
-  opacity: 0.6;
-  margin-bottom: 14px;
-  color: var(--text-color);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
   flex-shrink: 0;
-  /* Keeps the date visible */
 }
 
-/* NEW: Scroll Container Logic */
 .scrollContainer {
   width: 100%;
   overflow-y: auto;
-  /* Forces scrollbar when text is too long */
-  padding-right: 10px;
-  /* Space for the scrollbar */
-
-  /* Custom Scrollbar for Night/Day mode */
+  padding-right: 8px;
   scrollbar-width: thin;
   scrollbar-color: var(--border-soft) transparent;
 }
 
-/* Chrome, Edge, and Safari scrollbar styling */
 .scrollContainer::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .scrollContainer::-webkit-scrollbar-thumb {
@@ -46,11 +39,10 @@
 }
 
 .content {
-  font-size: 19px;
-  line-height: 1.8;
+  font-size: 0.975rem;
+  line-height: 1.7;
   color: var(--text-color);
   white-space: pre-wrap;
   word-wrap: break-word;
-
-
+  margin: 0;
 }

@@ -1,0 +1,179 @@
+.page {
+  min-height: 100vh;
+  padding: 32px 24px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-size: 0.875rem;
+}
+
+.totalLine {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.totalLine strong {
+  color: var(--text-color);
+  font-size: 1.05rem;
+}
+
+.message {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding: 0.75rem 1rem;
+  background: var(--surface-3);
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 1.5rem;
+}
+
+.statBox {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: var(--card-shadow-base);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.statBox:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-pop);
+}
+
+.statBox h3 {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.count {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin: 0.5rem 0 0.25rem;
+  color: #1DA1F2;
+  line-height: 1;
+  display: block;
+}
+
+.tableCard {
+  margin-top: 1.5rem;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--card-shadow-base);
+  margin-block-end:20px;
+}
+
+.tableCard h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-color);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.table td {
+  text-align: left;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-color);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr {
+  transition: background 150ms ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(29, 161, 242, 0.05);
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 18px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
