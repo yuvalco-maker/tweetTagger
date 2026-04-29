@@ -1,10 +1,26 @@
 :root {
   color-scheme: light dark;
 
+  /* ===== Design overhaul tokens (dark-first) ===== */
+  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.22) 0%, transparent 55%);
+
+  /* card glass */
+  --card-surface: rgba(10, 17, 30, 0.88);
+  --card-border-color: rgba(29, 161, 242, 0.2);
+  --card-shadow-base: 0 24px 64px rgba(0, 0, 0, 0.65);
+  --card-shadow-glow: 0 0 60px rgba(29, 161, 242, 0.1);
+
+  /* inputs */
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-border: rgba(29, 161, 242, 0.75);
+  --input-focus-ring: rgba(29, 161, 242, 0.15);
+  --input-focus-bg: rgba(29, 161, 242, 0.04);
+
   /* ===== Existing colors (keep) ===== */
-  --app-bg-image: url("./assets/day-pattern.png");
-  --bg-color: light-dark(#dcdada66, #121212);
-  --text-color: light-dark(#1a1a1a, #ffffff);
+  --app-bg-image: none;
+  --bg-color: light-dark(#e8f4fd, #060d1e);
+  --text-color: light-dark(#0f172a, #ffffff);
   --modal-bg: light-dark(#f87171, #450a0a);
   --accent-color: light-dark(#007bff, #375a7f);
   --overlay: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
@@ -64,6 +80,17 @@
   --transition-med: 220ms ease;
 }
 
+/* ===== Light-mode overrides (applied by ThemeToggle via body.light) ===== */
+body.light {
+  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.12) 0%, transparent 55%);
+  --card-surface: rgba(255, 255, 255, 0.95);
+  --card-border-color: rgba(29, 161, 242, 0.15);
+  --card-shadow-base: 0 20px 60px rgba(0, 0, 0, 0.1);
+  --card-shadow-glow: 0 0 40px rgba(29, 161, 242, 0.05);
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --input-border: rgba(0, 0, 0, 0.14);
+}
+
 /* ===== Base ===== */
 * {
   box-sizing: border-box;
@@ -76,10 +103,9 @@ body {
   height: 100%;
   color: var(--text-color);
   background-color: var(--bg-color);
-  background-image: var(--app-bg-image);
-  background-size: 70%;
+  background-image: var(--body-gradient);
   background-repeat: no-repeat;
-  background-position: center;
+  background-size: cover;
   background-attachment: fixed;
 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -254,24 +280,17 @@ textarea:focus-visible {
   box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
-/* ===== Inputs ===== */
-.input,
-input,
+/* ===== Inputs (base reset — component CSS handles full styling) ===== */
 select,
 textarea {
   width: 100%;
   border-radius: 14px;
   border: 1px solid var(--border-soft);
-  background: var(--surface-3);
+  background: var(--input-bg);
   color: var(--text-color);
   padding: 11px 12px;
+  font-family: inherit;
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 0.9;
 }
 
 /* ===== Chips / badges ===== */

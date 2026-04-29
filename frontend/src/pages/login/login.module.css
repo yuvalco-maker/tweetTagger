@@ -1,72 +1,125 @@
-/* login.module.css */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .login-card {
-    background-color: var(--card-bg);
-    backdrop-filter: blur(12px);
-    padding: 2.5rem;
-    border-radius: 24px;
-    display: grid;
-    gap: 1.5rem;
-    /* Two-column structure: Left for link, Right for button */
-    grid-template-columns: 1fr 1fr; 
-    grid-template-areas: 
-        "title title"
-        "user  user"
-        "pass  pass"
-        "reg   sub";
-    width: 100%;
-    max-width: 400px;
-    align-items: center; /* Vertically aligns items in the row */
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-surface);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 2.75rem 2.5rem 2.25rem;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+  display: flex;
+  flex-direction: column;
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-form { display: contents; }
-
-.login-header { 
-    grid-area: title; 
-    justify-self: center; 
-    color: var(--text-color);
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+.logo-mark {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.45);
 }
 
-.username-input { 
-    grid-area: user; 
-    grid-column: span 2; 
+.login-header {
+  text-align: center;
+  color: var(--text-color);
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.35rem;
+  line-height: 1.1;
 }
 
-.password-input { 
-    grid-area: pass; 
-    grid-column: span 2; 
+.login-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 2rem;
 }
 
-.reg-container { 
-    grid-area: reg; 
-    font-size: 0.85rem;
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    /* FIX: Changed from flex-start to center */
-    align-items: center; 
-    text-align: center;
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.625rem;
+}
+
+.forgot-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.forgot-link {
+  font-size: 0.82rem;
+  color: #1DA1F2;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.forgot-link:hover {
+  opacity: 0.7;
+  text-decoration: none;
+}
+
+.btn-sub {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.google-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+  opacity: 0.6;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--card-border-color);
+}
+
+.reg-container {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
 }
 
 .signup-link {
-    color: var(--tweeter-blue);
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    display: inline-block; /* Helps with padding/spacing if needed */
+  color: #1DA1F2;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.3rem;
+  transition: opacity 0.15s ease;
 }
 
 .signup-link:hover {
-    text-decoration: underline;
-    filter: brightness(1.2);
-    /* Subtle scale effect for a "better" look */
-    transform: translateY(-1px);
-}
-
-.btn-sub { 
-    grid-area: sub; 
-    width: 100%; 
+  opacity: 0.7;
+  text-decoration: none;
 }
