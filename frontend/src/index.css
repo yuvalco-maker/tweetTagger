@@ -1,68 +1,78 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  /* ===== Design overhaul tokens (dark-first) ===== */
-  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.22) 0%, transparent 55%);
+  /* === Brand === */
+  --brand: #1DA1F2;
+  --brand-dark: #0a8ed4;
+  --brand-glow: rgba(29, 161, 242, 0.35);
+  --brand-subtle: rgba(29, 161, 242, 0.10);
+  --brand-border: rgba(29, 161, 242, 0.22);
 
-  /* card glass */
-  --card-surface: rgba(10, 17, 30, 0.88);
-  --card-border-color: rgba(29, 161, 242, 0.2);
-  --card-shadow-base: 0 24px 64px rgba(0, 0, 0, 0.65);
-  --card-shadow-glow: 0 0 60px rgba(29, 161, 242, 0.1);
+  /* === Texture === */
+  --dot-color: rgba(0, 0, 0, 0.030);
 
-  /* inputs */
-  --input-bg: rgba(255, 255, 255, 0.05);
-  --input-border: rgba(255, 255, 255, 0.1);
+  /* === Light-mode base (default) === */
+  --body-gradient:
+    radial-gradient(ellipse 160% 55% at 50% -10%, rgba(29, 161, 242, 0.10) 0%, transparent 60%);
+
+  --card-surface: rgba(255, 255, 255, 0.96);
+  --card-border-color: rgba(29, 161, 242, 0.14);
+  --card-shadow-base: 0 16px 52px rgba(0, 0, 0, 0.09);
+  --card-shadow-glow: 0 0 32px rgba(29, 161, 242, 0.04);
+
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --input-border: rgba(0, 0, 0, 0.13);
   --input-focus-border: rgba(29, 161, 242, 0.75);
-  --input-focus-ring: rgba(29, 161, 242, 0.15);
-  --input-focus-bg: rgba(29, 161, 242, 0.04);
+  --input-focus-ring: rgba(29, 161, 242, 0.18);
+  --input-focus-bg: rgba(29, 161, 242, 0.05);
 
-  /* ===== Existing colors (keep) ===== */
+  /* === Theme-adaptive colors === */
   --app-bg-image: none;
-  --bg-color: light-dark(#fafaf8, #060d1e);
-  --text-color: light-dark(#0f172a, #ffffff);
-  --modal-bg: light-dark(#f87171, #450a0a);
-  --accent-color: light-dark(#007bff, #375a7f);
-  --overlay: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7));
-  --error-txt: light-dark(#1a1a1a, #ffffff);
-  --card-bg: light-dark(#ffffff, #1e1e1e);
-  --tweeter-blue: light-dark(#1DA1F2, #1DA1F2);
-  --btn-text: light-dark(#ffffff, #121212);
-  --header-bg: light-dark(#1DA1F2, #121212);
+  --bg-color: #eef4fb;
+  --text-color: #0d1526;
+  --text-muted: rgba(13, 21, 38, 0.55);
+  --modal-bg: #f87171;
+  --accent-color: #1DA1F2;
+  --overlay: rgba(0, 0, 0, 0.4);
+  --error-txt: #1a1a1a;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --tweeter-blue: #1DA1F2;
+  --btn-text: #ffffff;
 
-  --nav-bg: light-dark(#111111, #0b0b0b);
-  --nav-text: light-dark(#ffffff, #ffffff);
+  --nav-bg: #0d1526;
+  --nav-text: #ffffff;
 
-  --btn-secondary-bg: light-dark(#2c3e50, #1f2937);
-  --btn-secondary-text: light-dark(#ffffff, #ffffff);
+  --btn-secondary-bg: light-dark(#1e293b, #1a2235);
+  --btn-secondary-text: #ffffff;
 
-  --border-soft: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.10));
-  --shadow-card: light-dark(0 18px 50px rgba(0, 0, 0, 0.25), 0 18px 50px rgba(0, 0, 0, 0.45));
+  --border-soft: rgba(0, 0, 0, 0.09);
+  --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.14);
 
-  --danger: light-dark(#e74c3c, #ef4444);
-  --safe: light-dark(#28a745, #22c55e);
-  --escalate: light-dark(#f39c12, #f59e0b);
-  --risk-high: light-dark(#c82333, #dc2626);
+  --danger: #e74c3c;
+  --safe: #16a34a;
+  --escalate: #d97706;
+  --risk-high: #c82333;
 
-  /* Modern Category Palette */
-  --cat-oil: #34495e;
-  --cat-elec: #f1c40f;
-  --cat-gas: #e67e22;
-  --cat-other: #95a5a6;
+  /* Category palette */
+  --cat-oil: #475569;
+  --cat-elec: #eab308;
+  --cat-gas: #f97316;
+  --cat-other: #94a3b8;
 
-  /* Selection Highlight Colors */
-  --selected-cat-bg: light-dark(#1DA1F2, #375a7f);
+  /* Selection */
+  --selected-cat-bg: #1DA1F2;
   --selected-cat-text: #ffffff;
 
-  /* ===== Added design tokens (new) ===== */
-  --surface-2: light-dark(rgba(255, 255, 255, 0.72), rgba(30, 30, 30, 0.72));
-  --surface-3: light-dark(rgba(255, 255, 255, 0.55), rgba(30, 30, 30, 0.55));
-  --text-muted: light-dark(rgba(26, 26, 26, 0.70), rgba(255, 255, 255, 0.72));
-  --focus-ring: light-dark(rgba(29, 161, 242, 0.35), rgba(29, 161, 242, 0.35));
+  /* Surfaces */
+  --surface-2: rgba(255, 255, 255, 0.75);
+  --surface-3: rgba(255, 255, 255, 0.50);
+  --focus-ring: rgba(29, 161, 242, 0.32);
 
+  /* Scale */
   --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
 
   --space-1: 6px;
   --space-2: 10px;
@@ -73,44 +83,55 @@
   --container-max: 1100px;
   --content-max: 520px;
 
-  --shadow-soft: light-dark(0 10px 28px rgba(0, 0, 0, 0.12), 0 10px 28px rgba(0, 0, 0, 0.35));
-  --shadow-pop: light-dark(0 14px 40px rgba(0, 0, 0, 0.20), 0 14px 40px rgba(0, 0, 0, 0.50));
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-pop: 0 16px 44px rgba(0, 0, 0, 0.18);
 
   --transition-fast: 140ms ease;
   --transition-med: 220ms ease;
 }
 
-/* ===== Light-mode overrides (applied by ThemeToggle via body.light) ===== */
-body.light {
-  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(255, 190, 50, 0.18) 0%, transparent 55%);
-  --card-surface: rgba(255, 255, 255, 0.92);
-  --card-border-color: rgba(0, 0, 0, 0.08);
-  --card-shadow-base: 0 20px 60px rgba(0, 0, 0, 0.1);
-  --card-shadow-glow: 0 0 40px rgba(255, 190, 50, 0.08);
-  --input-bg: rgba(0, 0, 0, 0.04);
-  --input-border: rgba(0, 0, 0, 0.12);
-  --input-focus-border: rgba(29, 161, 242, 0.6);
-  --input-focus-ring: rgba(29, 161, 242, 0.12);
-  --input-focus-bg: rgba(29, 161, 242, 0.03);
+/* === Dark mode overrides (applied by ThemeToggle via body.dark) === */
+body.dark {
+  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.22) 0%, transparent 55%);
+  --dot-color: rgba(255, 255, 255, 0.03);
+
+  --bg-color: #060d1e;
+  --text-color: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --modal-bg: #450a0a;
+  --overlay: rgba(0, 0, 0, 0.7);
+  --error-txt: #ffffff;
+  --card-bg: rgba(20, 30, 48, 0.92);
+
+  --card-surface: rgba(10, 17, 30, 0.88);
+  --card-border-color: rgba(29, 161, 242, 0.2);
+  --card-shadow-base: 0 24px 64px rgba(0, 0, 0, 0.65);
+  --card-shadow-glow: 0 0 60px rgba(29, 161, 242, 0.1);
+
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+
+  --border-soft: rgba(255, 255, 255, 0.09);
+  --surface-2: rgba(15, 25, 40, 0.72);
+  --surface-3: rgba(15, 25, 40, 0.50);
+  --btn-secondary-bg: #1a2235;
 }
 
-/* ===== Base ===== */
+/* === Base reset === */
 * {
   box-sizing: border-box;
 }
 
-html {}
-
 body {
   margin: 0;
-  height: 100%;
+  min-height: 100vh;
   color: var(--text-color);
   background-color: var(--bg-color);
-  background-image: var(--body-gradient);
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-image:
+    var(--body-gradient),
+    radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
   background-attachment: fixed;
-
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -131,7 +152,7 @@ a:hover {
   color: var(--selected-cat-text);
 }
 
-/* ===== Layout wrapper ===== */
+/* === Layout wrapper === */
 .app-wrapper {
   min-height: 100vh;
   width: 100vw;
@@ -147,29 +168,30 @@ a:hover {
   max-width: var(--container-max);
 }
 
-/* ===== Glassy panel helper (optional) ===== */
+/* === Glass panel helper === */
 .glass {
   background: var(--surface-2);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-/* ===== Card ===== */
+/* === Card === */
 .card {
   width: 100%;
   max-width: var(--content-max);
-  background: var(--card-bg);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  padding: clamp(18px, 3.5vw, 28px);
+  background: var(--card-surface);
+  border: 1px solid var(--card-border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+  padding: clamp(20px, 3.5vw, 32px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.card h1,
-.card h2,
-.card h3 {
+.card h1, .card h2, .card h3 {
   margin: 0 0 var(--space-2) 0;
   letter-spacing: -0.02em;
 }
@@ -180,7 +202,7 @@ a:hover {
   line-height: 1.5;
 }
 
-/* ===== Navbar ===== */
+/* === Navbar === */
 .navbar {
   position: sticky;
   top: 0;
@@ -218,43 +240,46 @@ a:hover {
 
 .username {
   color: var(--nav-text);
-  opacity: 0.92;
+  opacity: 0.85;
   font-weight: 600;
 }
 
-/* ===== Buttons (unified) ===== */
+/* === Unified buttons === */
 .btn {
   appearance: none;
   border: 1px solid transparent;
-  border-radius: 14px;
-  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
+  gap: 8px;
+  font-family: inherit;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
   user-select: none;
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.btn:active {
+.btn:active:not(:disabled) {
   transform: translateY(1px);
 }
 
 .btn-primary {
-  background: var(--tweeter-blue);
-  color: var(--btn-text);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px var(--brand-glow);
 }
 
-.btn-primary:hover {
-  box-shadow: var(--shadow-pop);
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--brand-glow);
 }
 
 .btn-secondary {
@@ -271,23 +296,22 @@ a:hover {
 
 .btn-danger {
   background: var(--danger);
-  color: var(--btn-text);
+  color: #ffffff;
 }
 
-/* Focus (keyboard-friendly) */
+/* === Focus (accessibility) === */
 .btn:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px var(--focus-ring);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* ===== Inputs (base reset — component CSS handles full styling) ===== */
-select,
-textarea {
+/* === Native inputs === */
+select, textarea {
   width: 100%;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-soft);
   background: var(--input-bg);
   color: var(--text-color);
@@ -296,45 +320,49 @@ textarea {
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
 }
 
-/* ===== Chips / badges ===== */
+/* === Badges === */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
+  gap: 6px;
+  padding: 5px 12px;
   border-radius: 999px;
   border: 1px solid var(--border-soft);
   background: var(--surface-3);
   color: var(--text-color);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .badge.safe {
-  background: color-mix(in srgb, var(--safe) 18%, var(--card-bg));
-  border-color: color-mix(in srgb, var(--safe) 35%, var(--border-soft));
+  background: color-mix(in srgb, var(--safe) 14%, transparent);
+  border-color: color-mix(in srgb, var(--safe) 30%, transparent);
+  color: var(--safe);
 }
 
 .badge.danger {
-  background: color-mix(in srgb, var(--danger) 18%, var(--card-bg));
-  border-color: color-mix(in srgb, var(--danger) 35%, var(--border-soft));
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+  color: var(--danger);
 }
 
 .badge.escalate {
-  background: color-mix(in srgb, var(--escalate) 18%, var(--card-bg));
-  border-color: color-mix(in srgb, var(--escalate) 35%, var(--border-soft));
+  background: color-mix(in srgb, var(--escalate) 14%, transparent);
+  border-color: color-mix(in srgb, var(--escalate) 30%, transparent);
+  color: var(--escalate);
 }
 
-/* ===== Simple modal overlay helper ===== */
+/* === Modal overlay helper === */
 .overlay {
   background: var(--overlay);
   backdrop-filter: blur(6px);
 }
 
-/* ===== Reduce motion ===== */
+/* === Reduce motion === */
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
+    animation: none !important;
     scroll-behavior: auto !important;
   }
 }

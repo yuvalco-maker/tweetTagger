@@ -1,43 +1,48 @@
-/* ErrorModal.css */
-
 .modal-overlay {
   position: fixed;
-  top: 70px;
-  /* Distance from top */
+  top: 74px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   pointer-events: none;
-  /* Allows you to click things BEHIND the message */
   z-index: 9999;
+  padding: 0 16px;
 }
 
 .modal-content {
   pointer-events: auto;
-  /* Makes the Close button clickable again */
-  background-color: var(--modal-bg);
-  color: var(--error-txt);
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  border: 2px solid light-dark(#dddddd, #333333);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  /* Animation to make it slide down from the top */
-  animation: slideDown 0.3s ease-out;
-
+  background: rgba(30, 8, 8, 0.92);
+  color: #fca5a5;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.30);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(239, 68, 68, 0.10);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: slideDown 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   display: flex;
   align-items: center;
-  gap: 15px;
-  min-width: 300px;
+  gap: 12px;
+  min-width: 280px;
+  max-width: 500px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+body.light .modal-content {
+  background: rgba(255, 241, 241, 0.96);
+  color: #b91c1c;
+  border-color: rgba(239, 68, 68, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
 
 @keyframes slideDown {
   from {
-    transform: translateY(-100%);
+    transform: translateY(-16px);
     opacity: 0;
   }
-
   to {
     transform: translateY(0);
     opacity: 1;

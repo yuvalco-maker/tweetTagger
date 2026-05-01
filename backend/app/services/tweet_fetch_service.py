@@ -5,13 +5,14 @@ from datetime import datetime, timezone
 from apify_client import ApifyClient
 from dotenv import load_dotenv
 from fastapi import HTTPException, status
-
 from backend.app.db.database import (
     tweets_collection,
+    processed_collection,
     tweet_search_queries_collection,
+    users_collection,
 )
-
 from backend.app.schemas.tweet_scheme import FetchTweetsRequest, TweetinDB
+from backend.app.services.ml.prediction_service import predict_tweets_by_query
 
 load_dotenv()
 
@@ -195,22 +196,27 @@ async def fetch_tweets_from_apify(
         doc["_id"] = str(result.inserted_id)
         inserted_docs.append(doc)
 
+    ml_results = await predict_tweets_by_query(query_id)
+
     await tweet_search_queries_collection.update_one(
         {"_id": query_result.inserted_id},
         {
             "$set": {
                 "inserted_count": len(inserted_docs),
+                "ml_processed_count": len(ml_results),
                 "status": "completed",
             }
         },
     )
 
     return {
-        "message": "Tweets fetched and stored successfully",
+        "message": "Tweets fetched, stored, and auto-processed by ML",
         "query_id": query_id,
         "pulled_count": len(items),
         "inserted_count": len(inserted_docs),
+        "ml_processed_count": len(ml_results),
         "tweets": [TweetinDB(**doc) for doc in inserted_docs],
+        "ml_results": ml_results,
     }
 
 
@@ -249,3 +255,110 @@ async def get_my_search_queries(current_user: dict, limit: int = 50):
         queries.append(doc)
 
     return queries
+async def get_my_tweets_by_query(current_user: dict, query_id: str):
+    user_id = str(current_user["_id"])
+
+    cursor = (
+        tweets_collection
+        .find({
+            "fetched_by": user_id,
+            "query_id": query_id,
+        })
+        .sort("fetched_at", -1)
+    )
+
+    tweets = []
+
+    async for doc in cursor:
+        tweets.append(TweetinDB.from_mongo(doc))
+
+    return tweets
+async def get_queries_by_username(username: str, limit: int = 50):
+    user = await users_collection.find_one({"username": username})
+
+    if not user:
+        raise ValueError("User not found")
+
+    user_id = str(user["_id"])
+
+    cursor = (
+        tweet_search_queries_collection
+        .find({"requested_by": user_id})
+        .sort("requested_at", -1)
+        .limit(limit)
+    )
+
+    queries = []
+
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        doc["username"] = user.get("username")
+        queries.append(doc)
+
+    return queries
+async def get_global_processed_stats():
+    cursor = processed_collection.find({
+        "is_dangerous": {"$ne": None},
+        "category": {"$ne": None},
+    })
+
+    total = 0
+    dangerous_count = 0
+    not_dangerous_count = 0
+
+    categories_total = {}
+    categories_dangerous = {}
+    categories_not_dangerous = {}
+
+    async for tweet in cursor:
+        total += 1
+
+        category = tweet.get("category") or "Unknown"
+        is_dangerous = tweet.get("is_dangerous")
+
+        categories_total[category] = categories_total.get(category, 0) + 1
+
+        if is_dangerous is True:
+            dangerous_count += 1
+            categories_dangerous[category] = categories_dangerous.get(category, 0) + 1
+        else:
+            not_dangerous_count += 1
+            categories_not_dangerous[category] = (
+                categories_not_dangerous.get(category, 0) + 1
+            )
+
+    def percentage(count: int, base: int):
+        if base == 0:
+            return 0
+        return round((count / base) * 100, 2)
+
+    def build_category_stats(category_dict: dict, base: int):
+        return [
+            {
+                "category": category,
+                "count": count,
+                "percentage": percentage(count, base),
+            }
+            for category, count in category_dict.items()
+        ]
+
+    return {
+        "total_ml_tagged": total,
+        "dangerous": {
+            "count": dangerous_count,
+            "percentage": percentage(dangerous_count, total),
+        },
+        "not_dangerous": {
+            "count": not_dangerous_count,
+            "percentage": percentage(not_dangerous_count, total),
+        },
+        "categories_total": build_category_stats(categories_total, total),
+        "categories_dangerous": build_category_stats(
+            categories_dangerous,
+            dangerous_count,
+        ),
+        "categories_not_dangerous": build_category_stats(
+            categories_not_dangerous,
+            not_dangerous_count,
+        ),
+    }
