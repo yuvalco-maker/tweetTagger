@@ -82,15 +82,16 @@ export default function Login() {
 
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId || gsiInitialized) return;
-
-    gsiInitialized = true;
+    if (!clientId) return;
 
     const init = () => {
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleGoogleCredential,
-      });
+      if (!gsiInitialized) {
+        gsiInitialized = true;
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCredential,
+        });
+      }
 
       if (googleBtnRef.current) {
         window.google.accounts.id.renderButton(googleBtnRef.current, {
