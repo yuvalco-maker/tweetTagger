@@ -19,7 +19,7 @@
 
   /* ===== Existing colors (keep) ===== */
   --app-bg-image: none;
-  --bg-color: light-dark(#e8f4fd, #060d1e);
+  --bg-color: light-dark(#fafaf8, #060d1e);
   --text-color: light-dark(#0f172a, #ffffff);
   --modal-bg: light-dark(#f87171, #450a0a);
   --accent-color: light-dark(#007bff, #375a7f);
@@ -82,13 +82,16 @@
 
 /* ===== Light-mode overrides (applied by ThemeToggle via body.light) ===== */
 body.light {
-  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.12) 0%, transparent 55%);
-  --card-surface: rgba(255, 255, 255, 0.95);
-  --card-border-color: rgba(29, 161, 242, 0.15);
+  --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(255, 190, 50, 0.18) 0%, transparent 55%);
+  --card-surface: rgba(255, 255, 255, 0.92);
+  --card-border-color: rgba(0, 0, 0, 0.08);
   --card-shadow-base: 0 20px 60px rgba(0, 0, 0, 0.1);
-  --card-shadow-glow: 0 0 40px rgba(29, 161, 242, 0.05);
+  --card-shadow-glow: 0 0 40px rgba(255, 190, 50, 0.08);
   --input-bg: rgba(0, 0, 0, 0.04);
-  --input-border: rgba(0, 0, 0, 0.14);
+  --input-border: rgba(0, 0, 0, 0.12);
+  --input-focus-border: rgba(29, 161, 242, 0.6);
+  --input-focus-ring: rgba(29, 161, 242, 0.12);
+  --input-focus-bg: rgba(29, 161, 242, 0.03);
 }
 
 /* ===== Base ===== */

@@ -17,12 +17,14 @@ export default function ThemeToggle() {
   }, [isDark]);
 
   return (
-    <button 
-      className={styles.toggleBtn} 
+    <button
+      className={styles.pill}
       onClick={() => setIsDark(!isDark)}
       type="button"
+      aria-label={isDark ? 'Switch to day mode' : 'Switch to night mode'}
     >
-      {isDark ? '☀️ Day' : '🌙 Night'}
+      <span className={`${styles.icon} ${!isDark ? styles.active : ''}`}>☀️</span>
+      <span className={`${styles.icon} ${isDark ? styles.active : ''}`}>🌙</span>
     </button>
   );
 }

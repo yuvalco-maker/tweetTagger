@@ -155,7 +155,7 @@ export default function Login() {
         </div>
 
         <h1 className={styles["login-header"]}>Welcome back</h1>
-        <p className={styles["login-subtitle"]}>Sign in to TweetTag</p>
+        <p className={styles["login-subtitle"]}>Sign in to TweetTager</p>
 
         <form
           onSubmit={(e) => {
