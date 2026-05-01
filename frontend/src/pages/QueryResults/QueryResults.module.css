@@ -87,3 +87,23 @@
     padding: 0 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .header {
+    padding: 16px 14px 14px;
+    margin-bottom: 14px;
+  }
+
+  .header h1 {
+    font-size: 1.3rem;
+  }
+
+  .message,
+  .list {
+    padding: 0 14px;
+  }
+
+  .page {
+    padding-bottom: 32px;
+  }
+}

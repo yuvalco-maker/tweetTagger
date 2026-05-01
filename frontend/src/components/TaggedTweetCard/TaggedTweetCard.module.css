@@ -179,3 +179,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@media (max-width: 500px) {
+  .tagsRow,
+  .originalRow {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+}

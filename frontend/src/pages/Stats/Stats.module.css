@@ -116,7 +116,13 @@
   border-radius: 20px;
   padding: 2rem;
   box-shadow: var(--card-shadow-base);
-  margin-block-end:20px;
+  margin-block-end: 20px;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tableCard h2 {
@@ -175,5 +181,25 @@
 
   .statsGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableCard {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+  }
+
+  .statBox {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .count {
+    font-size: 2.4rem;
+  }
+
+  .title {
+    font-size: 1.55rem;
   }
 }

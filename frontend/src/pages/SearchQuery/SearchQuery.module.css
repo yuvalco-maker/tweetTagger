@@ -321,3 +321,33 @@
     padding-left: 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px;
+  }
+
+  .card {
+    padding: 1.5rem 1.1rem;
+    border-radius: 18px;
+  }
+
+  .title {
+    font-size: 1.55rem;
+  }
+
+  .section,
+  .grid {
+    padding: 1.25rem 0 1.25rem 0.75rem;
+  }
+
+  .rangeButtons {
+    gap: 6px;
+  }
+
+  .rangeButton,
+  .activeRangeButton {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}

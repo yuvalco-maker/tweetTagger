@@ -79,3 +79,14 @@
   opacity: 0.70;
   text-decoration: none;
 }
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 2rem 1.5rem 1.75rem;
+    border-radius: 20px;
+  }
+
+  .register-header {
+    font-size: 1.55rem;
+  }
+}

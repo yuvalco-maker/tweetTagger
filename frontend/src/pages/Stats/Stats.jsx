@@ -24,25 +24,27 @@ function CategoryTable({ title, data }) {
       {!data || data.length === 0 ? (
         <p className={styles.empty}>No data yet</p>
       ) : (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Count</th>
-              <th>Percentage</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {data.map((item) => (
-              <tr key={item.category}>
-                <td>{item.category}</td>
-                <td>{item.count}</td>
-                <td>{item.percentage}%</td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Count</th>
+                <th>Percentage</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.category}>
+                  <td>{item.category}</td>
+                  <td>{item.count}</td>
+                  <td>{item.percentage}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
