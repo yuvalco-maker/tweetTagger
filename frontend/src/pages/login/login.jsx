@@ -100,6 +100,7 @@ export default function Login() {
           text: "continue_with",
           width: googleBtnRef.current.offsetWidth || 340,
           shape: "rectangular",
+          locale: "en",
         });
       }
     };
