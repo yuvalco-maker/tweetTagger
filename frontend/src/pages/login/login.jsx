@@ -6,6 +6,8 @@ import ErrorModal from "../../components/ErrorModal/ErrorModal.jsx";
 import ThemeToggle from "../../components/ThemeToggle/ThemeToggle.jsx";
 import styles from "./login.module.css";
 
+let gsiInitialized = false;
+
 function toBoolean(value) {
   if (typeof value === "boolean") return value;
   if (typeof value === "number") return value !== 0;
@@ -80,7 +82,9 @@ export default function Login() {
 
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId) return;
+    if (!clientId || gsiInitialized) return;
+
+    gsiInitialized = true;
 
     const init = () => {
       window.google.accounts.id.initialize({
