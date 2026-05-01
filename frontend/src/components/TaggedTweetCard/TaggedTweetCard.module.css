@@ -132,3 +132,50 @@
   white-space: nowrap;
   color: var(--text-color);
 }
+
+.editedBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(251, 146, 60, 0.12);
+  color: #f97316;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.originalLabel {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.originalRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+
+.originalItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 13px;
+  border-radius: 11px;
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  background: rgba(251, 146, 60, 0.06);
+}
+
+.originalValue {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: right;
+  color: #f97316;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./TaggedTweetCard.module.css";
 
+function dangerLabel(value) {
+  if (value === true) return "dangerous";
+  if (value === false) return "not dangerous";
+  return "unknown";
+}
+
 export default function TaggedTweetCard({ tweet }) {
   if (!tweet) return null;
 
-  const dangerLabel =
-    tweet.is_dangerous === true
-      ? "dangerous"
-      : tweet.is_dangerous === false
-      ? "not dangerous"
-      : "unknown";
-
+  const isEdited = tweet.edited === true;
   const status = tweet.status || "pending";
 
   return (
@@ -20,16 +20,16 @@ export default function TaggedTweetCard({ tweet }) {
           <div className={styles.author}>
             <span>{tweet.uploaded_by || "Unknown uploader"}</span>
           </div>
-
-          {tweet.created_at ? (
+          {tweet.created_at && (
             <div className={styles.date}>
               {new Date(tweet.created_at).toLocaleString()}
             </div>
-          ) : null}
+          )}
         </div>
 
         <div className={styles.metaRight}>
           <span className={styles.badge}>{status}</span>
+          {isEdited && <span className={styles.editedBadge}>edited</span>}
         </div>
       </div>
 
@@ -47,26 +47,43 @@ export default function TaggedTweetCard({ tweet }) {
 
         <div className={styles.tagItem}>
           <span className={styles.label}>danger</span>
-          <span className={styles.value}>{dangerLabel}</span>
+          <span className={styles.value}>{dangerLabel(tweet.is_dangerous)}</span>
         </div>
 
-        {}
         <div className={styles.tagItem}>
           <span className={styles.label}>tagged by</span>
-          <span className={styles.value}>
-            {tweet.tagged_by_username || "Me"}
-          </span>
+          <span className={styles.value}>{tweet.tagged_by_username || "Me"}</span>
         </div>
 
-        {tweet.locked_at ? (
+        {tweet.locked_at && (
           <div className={styles.tagItem}>
             <span className={styles.label}>locked at</span>
             <span className={styles.value}>
               {new Date(tweet.locked_at).toLocaleString()}
             </span>
           </div>
-        ) : null}
+        )}
       </div>
+
+      {isEdited && (
+        <>
+          <div className={styles.originalLabel}>ML original</div>
+          <div className={styles.originalRow}>
+            <div className={styles.originalItem}>
+              <span className={styles.label}>category</span>
+              <span className={styles.originalValue}>
+                {tweet.original_category || "—"}
+              </span>
+            </div>
+            <div className={styles.originalItem}>
+              <span className={styles.label}>danger</span>
+              <span className={styles.originalValue}>
+                {dangerLabel(tweet.original_is_dangerous)}
+              </span>
+            </div>
+          </div>
+        </>
+      )}
     </article>
   );
 }

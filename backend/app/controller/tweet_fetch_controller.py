@@ -61,18 +61,22 @@ async def get_my_queries(
             status_code=500,
             detail=f"Internal server error: {str(e)}",
         )
+
+
 @tweet_fetch_router.get("/query/{query_id}/tweets")
 async def get_query_tweets(
     query_id: str,
     current_user: dict = Depends(get_current_user),
 ):
     try:
-        return await get_my_tweets_by_query(current_user, query_id)
+        return await get_my_tweets_by_query(query_id)
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error: {str(e)}",
         )
+
+
 @tweet_fetch_router.get("/user-queries")
 async def get_user_queries(
     username: str = Query(..., min_length=1),
@@ -88,6 +92,8 @@ async def get_user_queries(
             status_code=500,
             detail=f"Internal server error: {str(e)}",
         )
+
+
 @tweet_fetch_router.get("/global-processed-stats")
 async def get_global_stats(
     current_user: dict = Depends(get_current_user),

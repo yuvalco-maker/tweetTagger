@@ -30,9 +30,12 @@ class MLTaggedTweet(BaseModel):
     fetched_at: Optional[datetime] = None
 
     is_dangerous: Optional[bool] = None
+    original_is_dangerous: Optional[bool] = None
+    original_category: Optional[str] = None
     category: Optional[str] = None
     confidence: Optional[float] = None
     status: Optional[str] = None
+    edited: Optional[bool] = False
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,

@@ -22,6 +22,8 @@ async def predict_tweet_by_id(tweet_id: str, collection=tweets_collection):
 
     tweet["is_dangerous"] = prediction.is_dangerous
     tweet["category"] = prediction.category
+    tweet["original_is_dangerous"] = prediction.is_dangerous
+    tweet["original_category"] = prediction.category
     tweet["status"] = "ml_tagged"
     tweet["_id"] = str(tweet["_id"])
 
@@ -35,10 +37,12 @@ async def predict_tweet_by_id(tweet_id: str, collection=tweets_collection):
 
 
 async def predict_tweets_by_query(query_id: str):
-    cursor = tweets_collection.find({
-        "query_id": query_id,
-        "is_dangerous": None,
-    })
+    cursor = tweets_collection.find(
+        {
+            "query_id": query_id,
+            "is_dangerous": None,
+        }
+    )
 
     results = []
 
@@ -51,6 +55,7 @@ async def predict_tweets_by_query(query_id: str):
                 "$set": {
                     "is_dangerous": prediction.is_dangerous,
                     "category": prediction.category,
+                    "original_category": prediction.category,
                     "status": "ml_tagged",
                 }
             },
@@ -58,6 +63,8 @@ async def predict_tweets_by_query(query_id: str):
 
         tweet["is_dangerous"] = prediction.is_dangerous
         tweet["category"] = prediction.category
+        tweet["original_is_dangerous"] = prediction.is_dangerous
+        tweet["original_category"] = prediction.category
         tweet["status"] = "ml_tagged"
         tweet["_id"] = str(tweet["_id"])
 

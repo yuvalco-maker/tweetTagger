@@ -51,29 +51,17 @@ def extract_author_info(item: dict):
         or item.get("userName")
     )
 
-    author_name = (
-        author.get("name")
-        or item.get("authorName")
-        or item.get("name")
-    )
+    author_name = author.get("name") or item.get("authorName") or item.get("name")
 
     return username, author_name
 
 
 def extract_tweet_url(item: dict):
-    return (
-        item.get("url")
-        or item.get("twitterUrl")
-        or item.get("link")
-    )
+    return item.get("url") or item.get("twitterUrl") or item.get("link")
 
 
 def extract_tweet_id(item: dict):
-    tweet_id = (
-        item.get("id")
-        or item.get("tweetId")
-        or item.get("twitterId")
-    )
+    tweet_id = item.get("id") or item.get("tweetId") or item.get("twitterId")
 
     if tweet_id:
         return str(tweet_id)
@@ -162,21 +150,17 @@ async def fetch_tweets_from_apify(
             "uploaded_by": "apify",
             "content": text,
             "created_at": created_at_dt,
-
             "tweet_id": tweet_id,
             "url": url,
             "username": username,
             "author_name": author_name,
             "language": request.language,
-
             "query_id": query_id,
             "search_keywords": keywords,
             "search_start_date": request.start_date,
             "search_end_date": request.end_date,
-
             "fetched_by": user_id,
             "fetched_at": datetime.now(timezone.utc),
-
             "status": "pending",
             "locked_at": None,
             "locked_by": None,
@@ -224,8 +208,7 @@ async def get_my_fetched_tweets(current_user: dict, limit: int = 50):
     user_id = str(current_user["_id"])
 
     cursor = (
-        tweets_collection
-        .find({"fetched_by": user_id})
+        tweets_collection.find({"fetched_by": user_id})
         .sort("fetched_at", -1)
         .limit(limit)
     )
@@ -242,8 +225,7 @@ async def get_my_search_queries(current_user: dict, limit: int = 50):
     user_id = str(current_user["_id"])
 
     cursor = (
-        tweet_search_queries_collection
-        .find({"requested_by": user_id})
+        tweet_search_queries_collection.find({"requested_by": user_id})
         .sort("requested_at", -1)
         .limit(limit)
     )
@@ -255,17 +237,15 @@ async def get_my_search_queries(current_user: dict, limit: int = 50):
         queries.append(doc)
 
     return queries
-async def get_my_tweets_by_query(current_user: dict, query_id: str):
-    user_id = str(current_user["_id"])
 
-    cursor = (
-        tweets_collection
-        .find({
-            "fetched_by": user_id,
+
+async def get_my_tweets_by_query(query_id: str):
+
+    cursor = tweets_collection.find(
+        {
             "query_id": query_id,
-        })
-        .sort("fetched_at", -1)
-    )
+        }
+    ).sort("fetched_at", -1)
 
     tweets = []
 
@@ -273,6 +253,8 @@ async def get_my_tweets_by_query(current_user: dict, query_id: str):
         tweets.append(TweetinDB.from_mongo(doc))
 
     return tweets
+
+
 async def get_queries_by_username(username: str, limit: int = 50):
     user = await users_collection.find_one({"username": username})
 
@@ -282,8 +264,7 @@ async def get_queries_by_username(username: str, limit: int = 50):
     user_id = str(user["_id"])
 
     cursor = (
-        tweet_search_queries_collection
-        .find({"requested_by": user_id})
+        tweet_search_queries_collection.find({"requested_by": user_id})
         .sort("requested_at", -1)
         .limit(limit)
     )
@@ -296,11 +277,15 @@ async def get_queries_by_username(username: str, limit: int = 50):
         queries.append(doc)
 
     return queries
+
+
 async def get_global_processed_stats():
-    cursor = processed_collection.find({
-        "is_dangerous": {"$ne": None},
-        "category": {"$ne": None},
-    })
+    cursor = processed_collection.find(
+        {
+            "is_dangerous": {"$ne": None},
+            "category": {"$ne": None},
+        }
+    )
 
     total = 0
     dangerous_count = 0
