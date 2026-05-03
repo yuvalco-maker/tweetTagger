@@ -10,6 +10,7 @@ import SearchQuery from "./pages/SearchQuery/SearchQuery.jsx";
 import QueryResults from "./pages/QueryResults/QueryResults.jsx";
 import QueryHistory from "./pages/QueryHistory/QueryHistory.jsx";
 import Stats from "./pages/Stats/Stats.jsx";
+import TweetDetail from "./pages/TweetDetail/TweetDetail.jsx";
 
 function AppLayout() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/query-results/:queryId" element={<QueryResults />} />
           <Route path="/query-history" element={<QueryHistory />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/tweet-detail/:tweetId" element={<TweetDetail />} />
         </Route>
       </Routes>
     </Router>

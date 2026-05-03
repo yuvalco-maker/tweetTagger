@@ -7,18 +7,22 @@ function dangerLabel(value) {
   return "unknown";
 }
 
-export default function TaggedTweetCard({ tweet }) {
+export default function TaggedTweetCard({ tweet, onClick }) {
   if (!tweet) return null;
 
   const isEdited = tweet.edited === true;
   const status = tweet.status || "pending";
 
   return (
-    <article className={styles.card}>
+    <article
+      className={styles.card}
+      onClick={onClick}
+      style={onClick ? { cursor: "pointer" } : undefined}
+    >
       <div className={styles.topRow}>
         <div className={styles.metaLeft}>
           <div className={styles.author}>
-            <span>{tweet.uploaded_by || "Unknown uploader"}</span>
+            <span>@{tweet.username || tweet.uploaded_by || "unknown"}</span>
           </div>
           {tweet.created_at && (
             <div className={styles.date}>

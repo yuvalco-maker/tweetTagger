@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from backend.app.dependencies.auth import get_current_user
 from backend.app.schemas.tweet_scheme import FetchTweetsRequest
+from backend.app.schemas.ml_schema import MLTaggedTweet
 from backend.app.services.tweet_fetch_service import (
     fetch_tweets_from_apify,
     get_my_fetched_tweets,
@@ -9,6 +10,8 @@ from backend.app.services.tweet_fetch_service import (
     get_my_tweets_by_query,
     get_queries_by_username,
     get_global_processed_stats,
+    get_tweet,
+    update_tweet,
 )
 
 tweet_fetch_router = APIRouter(
@@ -100,6 +103,39 @@ async def get_global_stats(
 ):
     try:
         return await get_global_processed_stats()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+
+
+@tweet_fetch_router.get("/tweet/{tweet_id}")
+async def on_get_tweet(
+    tweet_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_tweet(tweet_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+
+
+@tweet_fetch_router.patch("/tweet/{tweet_id}")
+async def on_update_tweet(
+    tweet_id: str,
+    tweet: MLTaggedTweet,
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        tweet_data = tweet.model_dump()
+        tweet_data["_id"] = tweet_id
+        return await update_tweet(tweet_data)
+    except HTTPException as he:
+        raise he
     except Exception as e:
         raise HTTPException(
             status_code=500,

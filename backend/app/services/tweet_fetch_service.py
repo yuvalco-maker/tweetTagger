@@ -13,6 +13,7 @@ from backend.app.db.database import (
 )
 from backend.app.schemas.tweet_scheme import FetchTweetsRequest, TweetinDB
 from backend.app.services.ml.prediction_service import predict_tweets_by_query
+from bson import ObjectId
 
 load_dotenv()
 
@@ -240,17 +241,13 @@ async def get_my_search_queries(current_user: dict, limit: int = 50):
 
 
 async def get_my_tweets_by_query(query_id: str):
-
-    cursor = tweets_collection.find(
-        {
-            "query_id": query_id,
-        }
-    ).sort("fetched_at", -1)
+    cursor = processed_collection.find({"query_id": query_id}).sort("fetched_at", -1)
 
     tweets = []
 
     async for doc in cursor:
-        tweets.append(TweetinDB.from_mongo(doc))
+        doc["_id"] = str(doc["_id"])
+        tweets.append(doc)
 
     return tweets
 
@@ -347,3 +344,46 @@ async def get_global_processed_stats():
             not_dangerous_count,
         ),
     }
+
+
+async def get_tweet(tweet_id: str):
+    tweet = await processed_collection.find_one({"tweet_id": tweet_id})
+    if not tweet:
+        raise HTTPException(status_code=404, detail="Tweet not found")
+    tweet["_id"] = str(tweet["_id"])
+    return tweet
+
+
+async def update_tweet(tweet):
+
+    data = await processed_collection.find_one({"_id": ObjectId(tweet["_id"])})
+    if not data:
+        raise HTTPException(status_code=404, detail="Tweet not found")
+    danger = tweet["is_dangerous"]
+    cat = tweet["category"]
+    if data["is_dangerous"] == danger and cat == data["category"]:
+        data["_id"] = str(data["_id"])
+        return data
+
+    original_cat = data.get("original_category")
+    original_danger = data.get("original_is_dangerous")
+    reverted_to_original = (
+        original_cat is not None
+        and original_danger is not None
+        and cat == original_cat
+        and danger == original_danger
+    )
+    edited_flag = not reverted_to_original
+
+    res = await processed_collection.update_one(
+        {"_id": ObjectId(tweet["_id"])},
+        {"$set": {"category": cat, "is_dangerous": danger, "edited": edited_flag}},
+    )
+    if not res.matched_count:
+        raise HTTPException(status_code=404, detail="Tweet not found")
+
+    data["category"] = cat
+    data["is_dangerous"] = danger
+    data["edited"] = edited_flag
+    data["_id"] = str(data["_id"])
+    return data

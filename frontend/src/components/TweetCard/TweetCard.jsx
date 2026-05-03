@@ -1,6 +1,6 @@
 import styles from "./TweetCard.module.css";
 
-export default function TweetCard({ tweet }) {
+export default function TweetCard({ tweet, onClick }) {
   const dangerText =
     tweet.is_dangerous === true
       ? "Dangerous"
@@ -9,15 +9,16 @@ export default function TweetCard({ tweet }) {
       : "Not classified";
 
   return (
-    <article className={styles.card}>
+    <article className={styles.card} onClick={onClick} style={onClick ? { cursor: "pointer" } : undefined}>
       <div className={styles.top}>
         <span className={styles.username}>
           @{tweet.username || "unknown"}
         </span>
 
-        <span className={styles.badge}>
-          {dangerText}
-        </span>
+        <div className={styles.badges}>
+          <span className={styles.badge}>{dangerText}</span>
+          {tweet.edited && <span className={styles.editedBadge}>edited</span>}
+        </div>
       </div>
 
       <p className={styles.content}>{tweet.content}</p>

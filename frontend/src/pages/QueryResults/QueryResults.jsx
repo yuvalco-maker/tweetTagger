@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TweetCard from "../../components/TweetCard/TweetCard.jsx";
+import TaggedTweetCard from "../../components/TaggedTweetCard/TaggedTweetCard.jsx";
 import styles from "./QueryResults.module.css";
 
 const SERVER_URL =
@@ -71,7 +71,11 @@ export default function QueryResults() {
 
       <div className={styles.list}>
         {tweets.map((tweet) => (
-          <TweetCard key={tweet._id || tweet.id || tweet.tweet_id} tweet={tweet} />
+          <TaggedTweetCard
+            key={tweet._id || tweet.tweet_id}
+            tweet={tweet}
+            onClick={tweet.tweet_id ? () => navigate(`/tweet-detail/${tweet.tweet_id}`) : undefined}
+          />
         ))}
       </div>
     </div>
