@@ -42,7 +42,7 @@
   --nav-bg: #0d1526;
   --nav-text: #ffffff;
 
-  --btn-secondary-bg: light-dark(#1e293b, #1a2235);
+  --btn-secondary-bg: #1e293b;
   --btn-secondary-text: #ffffff;
 
   --border-soft: rgba(0, 0, 0, 0.09);
@@ -115,6 +115,14 @@ body.dark {
   --surface-2: rgba(15, 25, 40, 0.72);
   --surface-3: rgba(15, 25, 40, 0.50);
   --btn-secondary-bg: #1a2235;
+
+  --danger: #ef4444;
+  --safe: #22c55e;
+  --escalate: #f59e0b;
+  --risk-high: #dc2626;
+  --nav-bg: #060d18;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-pop: 0 16px 44px rgba(0, 0, 0, 0.52);
 }
 
 /* === Base reset === */

@@ -57,27 +57,40 @@ export default function QueryResults() {
   }
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
+  <div className={styles.page}>
+    <div className={styles.header}>
+      <div className={styles.headerActions}>
         <button className={styles.backButton} onClick={() => navigate("/home")}>
           ← Back to search
         </button>
 
-        <h1>Query Results</h1>
-        <p>{tweets.length} tweets found</p>
+        <button
+          className={styles.aiButton}
+          onClick={() => navigate(`/ai-summary/${queryId}`)}
+        >
+          AI Summary
+        </button>
       </div>
 
-      {message && <p className={styles.message}>{message}</p>}
-
-      <div className={styles.list}>
-        {tweets.map((tweet) => (
-          <TaggedTweetCard
-            key={tweet._id || tweet.tweet_id}
-            tweet={tweet}
-            onClick={tweet.tweet_id ? () => navigate(`/tweet-detail/${tweet.tweet_id}`) : undefined}
-          />
-        ))}
-      </div>
+      <h1>Query Results</h1>
+      <p>{tweets.length} tweets found</p>
     </div>
-  );
+
+    {message && <p className={styles.message}>{message}</p>}
+
+    <div className={styles.list}>
+      {tweets.map((tweet) => (
+        <TaggedTweetCard
+          key={tweet._id || tweet.tweet_id}
+          tweet={tweet}
+          onClick={
+            tweet.tweet_id
+              ? () => navigate(`/tweet-detail/${tweet.tweet_id}`)
+              : undefined
+          }
+        />
+      ))}
+    </div>
+  </div>
+);
 }

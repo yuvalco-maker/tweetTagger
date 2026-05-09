@@ -49,12 +49,31 @@ class TweetinDB(TweetSchema):
     category: Optional[str] = None
     confidence: Optional[float] = None
 
+    # Tweet embedding
+    embedding_text: Optional[str] = None
+    embedding_vector: Optional[List[float]] = None
+    embedding_model: Optional[str] = None
+
+    # Clustering / semantic groups
+    cluster_id: Optional[int] = None
+    cluster_label: Optional[str] = None
+    cluster_summary: Optional[str] = None
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         populate_by_name=True,
         extra="ignore",
     )
 
+    @classmethod
+    def from_mongo(cls, data: dict):
+        if not data:
+            return None
+
+        if "_id" in data:
+            data["_id"] = str(data["_id"])
+
+        return cls(**data)
     @classmethod
     def from_mongo(cls, data: dict):
         if not data:
@@ -86,16 +105,31 @@ class TweetSearchQueryInDB(BaseModel):
     requested_by: str
     requested_at: datetime = Field(default_factory=_now_utc)
 
-    inserted_count: int = 0
-    status: str = "completed"
+    inserted_count: Optional[int] = 0
+    ml_processed_count: Optional[int] = 0
+
+    status: Optional[str] = "completed"
+
+    # Embedding
+    embedding_text: Optional[str] = None
+    embedding_vector: Optional[List[float]] = None
+    embedding_model: Optional[str] = None
+
+    # Query stats
+    dangerous_count: Optional[int] = 0
+    not_dangerous_count: Optional[int] = 0
+
+    dangerous_percentage: Optional[float] = 0
+
+    categories_total: Optional[dict] = None
+    categories_dangerous: Optional[dict] = None
+    categories_not_dangerous: Optional[dict] = None
 
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
         extra="ignore",
     )
-
-
 class taggSchema(BaseModel):
     tweet_id: str
     is_dangerous: bool
