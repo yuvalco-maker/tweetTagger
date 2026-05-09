@@ -12,6 +12,8 @@ from backend.app.services.tweet_fetch_service import (
     get_global_processed_stats,
     get_tweet,
     update_tweet,
+    get_similar_queries,
+    get_smart_query_suggestions,
 )
 
 tweet_fetch_router = APIRouter(
@@ -136,6 +138,42 @@ async def on_update_tweet(
         return await update_tweet(tweet_data)
     except HTTPException as he:
         raise he
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+
+
+@tweet_fetch_router.get("/queries/{query_id}/similar")
+async def on_get_similar_queries(
+    query_id: str,
+    limit: int = Query(default=5, ge=1, le=20),
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_similar_queries(query_id, limit)
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}",
+        )
+
+
+@tweet_fetch_router.post("/smart-query-suggestions")
+async def on_get_smart_query_suggestions(
+    request: FetchTweetsRequest,
+    limit: int = Query(default=5, ge=1, le=20),
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_smart_query_suggestions(request, limit)
+    except HTTPException as he:
+        raise he
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=500,

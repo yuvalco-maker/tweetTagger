@@ -7,11 +7,13 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage.js
 import ResetPasswordPage from "./pages/ResetPasswordPage/ResetPasswordPage.jsx";
 import Home from "./pages/Home/Home.jsx";
 import SearchQuery from "./pages/SearchQuery/SearchQuery.jsx";
+import ThreatThemes from "./pages/ThreatThemes/ThreatThemes.jsx";
 import QueryResults from "./pages/QueryResults/QueryResults.jsx";
 import QueryHistory from "./pages/QueryHistory/QueryHistory.jsx";
 import Stats from "./pages/Stats/Stats.jsx";
 import TweetDetail from "./pages/TweetDetail/TweetDetail.jsx";
-
+import AISummaryPage from "./pages/AISummaryPage/AISummaryPage.jsx";
+import SmartQuerySuggestions from "./pages/SmartQuerySuggestions/SmartQuerySuggestions";
 function AppLayout() {
   return (
     <>
@@ -42,6 +44,9 @@ function App() {
           <Route path="/query-history" element={<QueryHistory />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/tweet-detail/:tweetId" element={<TweetDetail />} />
+          <Route path="/ai-summary/:queryId" element={<AISummaryPage />} />
+          <Route path="/smart-query-suggestions" element={<SmartQuerySuggestions />} />
+          <Route path="/threat-themes" element={<ThreatThemes />} />
         </Route>
       </Routes>
     </Router>

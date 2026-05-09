@@ -1,0 +1,218 @@
+.page {
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.card {
+  width: min(1150px, 100%);
+  margin: 0 auto;
+  background: var(--card-surface);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+}
+
+.backButton {
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 2rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: end;
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+
+.submitButton {
+  border: none;
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+}
+
+.message {
+  margin-top: 16px;
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.summary div {
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.summary strong {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--text-color);
+}
+
+.summary span {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.chartSection,
+.clustersSection {
+  margin-top: 32px;
+}
+
+.sectionTitle {
+  margin: 0 0 14px;
+  color: var(--text-color);
+  font-size: 1.15rem;
+}
+
+.chartBox {
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.tooltip {
+  max-width: 320px;
+  background: var(--card-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 12px;
+  color: var(--text-color);
+  box-shadow: var(--shadow-pop);
+}
+
+.tooltip p {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.clusterLayout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+}
+
+.clusterSidebar,
+.tweetsPanel {
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.clusterButton {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  color: var(--text-color);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 800;
+}
+
+.activeCluster {
+  border-color: var(--brand);
+  background: var(--brand-subtle);
+  color: var(--brand);
+}
+
+.clusterTitle {
+  margin: 0 0 14px;
+  color: var(--text-color);
+}
+
+.tweetCard {
+  border: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.tweetCard p {
+  color: var(--text-color);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.tweetMeta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.tweetMeta a {
+  color: var(--brand);
+  font-weight: 800;
+}
+
+@media (max-width: 850px) {
+  .controls,
+  .summary,
+  .clusterLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    padding: 18px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+}
