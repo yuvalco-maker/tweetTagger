@@ -148,6 +148,13 @@ export default function SearchQuery() {
         <button className={styles.backButton} onClick={() => navigate("/home")}>
           ← Back home
         </button>
+        <button
+  type="button"
+  className={styles.smartButton}
+  onClick={() => navigate("/smart-query-suggestions")}
+>
+  ✨ Smart Query Suggestions
+</button>
 
         <h1 className={styles.title}>Search Query</h1>
         <p className={styles.subtitle}>

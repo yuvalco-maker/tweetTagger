@@ -253,10 +253,10 @@
   margin-top: 1rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #fca5a5;
+  color: var(--danger);
   padding: 0.75rem 1rem;
-  background: rgba(185, 28, 28, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(231, 76, 60, 0.10);
+  border: 1px solid rgba(231, 76, 60, 0.25);
   border-radius: 10px;
 }
 
@@ -269,5 +269,689 @@
   .card {
     padding: 1.5rem 1.25rem;
     border-radius: 20px;
+  }
+}
+/* ─── AI Consult trigger ──────────────────────────────────────────*/
+.taggingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.taggingHeader .sectionTitle {
+  margin: 0;
+}
+
+.aiButton {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #1DA1F2 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.30);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.aiButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 26px rgba(139, 92, 246, 0.44);
+}
+
+/* ─── Modal overlay ───────────────────────────────────────────────*/
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  padding: 24px;
+  background: var(--overlay);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ─── Modal shell ─────────────────────────────────────────────────*/
+.aiModal {
+  width: 100%;
+  max-width: 660px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card-surface);
+  border: 1px solid var(--card-border-color);
+  border-radius: 28px;
+  padding: 0 0 1.75rem;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-soft) transparent;
+}
+
+/* ─── Modal header (bleeds to edges with gradient bg) ─────────────*/
+.aiModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 1.5rem 1.75rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.09) 0%,
+    rgba(29, 161, 242, 0.06) 100%
+  );
+  border-bottom: 1px solid var(--card-border-color);
+  border-radius: 28px 28px 0 0;
+  margin-bottom: 1.5rem;
+}
+
+.aiModalHeader h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-color);
+}
+
+.aiModalHeader h2::before {
+  content: '✨ ';
+  font-size: 1.1rem;
+}
+
+.aiModalHeader p {
+  margin: 5px 0 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ─── Modal body padding ──────────────────────────────────────────*/
+.aiTweetPreview,
+.currentTagBox,
+.chatArea,
+.errorMsg,
+.aiTextarea,
+.aiActions {
+  margin-left: 1.75rem;
+  margin-right: 1.75rem;
+}
+
+/* ─── Close button ────────────────────────────────────────────────*/
+.closeButton {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 9px;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+}
+
+/* ─── Tweet preview ───────────────────────────────────────────────*/
+.aiTweetPreview {
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  background: rgba(29, 161, 242, 0.07);
+  border: 1px solid rgba(29, 161, 242, 0.18);
+  margin-bottom: 1rem;
+}
+
+.aiTweetPreview span {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand);
+  margin-bottom: 7px;
+}
+
+.aiTweetPreview p {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+/* ─── Current tag chips ───────────────────────────────────────────*/
+.currentTagBox {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.currentTagBox > div {
+  flex: 1;
+  min-width: 120px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-3);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.currentTagBox span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.currentTagBox b {
+  color: var(--text-color);
+  font-size: 0.925rem;
+  font-weight: 700;
+}
+
+/* ─── Chat area ───────────────────────────────────────────────────*/
+.chatArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  max-height: 260px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-soft) transparent;
+}
+
+.chatBubbleAi {
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.chatBubbleAiStrong {
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.10),
+    rgba(29, 161, 242, 0.08)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  color: var(--text-color);
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+
+.chatBubbleAiStrong p {
+  margin: 0 0 0.6rem;
+}
+
+.chatBubbleAiStrong p:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Question input ──────────────────────────────────────────────*/
+.aiTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 96px;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  outline: none;
+  margin-bottom: 0.875rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.aiTextarea:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+/* ─── Action buttons ──────────────────────────────────────────────*/
+.aiActions {
+  display: flex;
+  gap: 10px;
+}
+
+.askButton,
+.applyButton {
+  flex: 1;
+  border: none;
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.askButton {
+  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(29, 161, 242, 0.30);
+}
+
+.askButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 24px rgba(29, 161, 242, 0.44);
+}
+
+.askButton:disabled {
+  opacity: 0.50;
+  cursor: not-allowed;
+}
+
+.applyButton {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--safe);
+  border: 1px solid rgba(34, 197, 94, 0.30);
+}
+
+.applyButton:hover {
+  background: rgba(34, 197, 94, 0.20);
+  transform: translateY(-1px);
+}
+
+/* ─── AI Consult trigger ──────────────────────────────────────────*/
+.taggingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.taggingHeader .sectionTitle {
+  margin: 0;
+}
+
+.aiButton {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #1DA1F2 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.3);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.aiButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 26px rgba(139, 92, 246, 0.44);
+}
+
+/* ─── Modal overlay ───────────────────────────────────────────────*/
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ─── Modal shell ─────────────────────────────────────────────────*/
+.aiModal {
+  width: min(720px, calc(100vw - 48px));
+  height: min(760px, calc(100vh - 48px));
+  background: var(--card-surface);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────*/
+.aiModalHeader {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.11) 0%,
+    rgba(29, 161, 242, 0.07) 100%
+  );
+  border-bottom: 1px solid var(--card-border-color);
+}
+
+.aiModalHeader h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--text-color);
+}
+
+.aiModalHeader p {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-radius: 12px;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 150ms ease;
+}
+
+.closeButton:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+}
+
+/* ─── Body ────────────────────────────────────────────────────────*/
+.aiModalBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 24px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-soft) transparent;
+}
+
+/* ─── Tweet preview ───────────────────────────────────────────────*/
+.aiTweetPreview {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(29, 161, 242, 0.07);
+  border: 1px solid rgba(29, 161, 242, 0.2);
+  margin-bottom: 14px;
+}
+
+.aiTweetPreview span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+
+.aiTweetPreview p {
+  margin: 0;
+  max-height: 170px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 0.92rem;
+  padding-right: 4px;
+}
+
+/* ─── Current tag chips ───────────────────────────────────────────*/
+.currentTagBox {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.currentTagBox > div {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-3);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+
+.currentTagBox span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.currentTagBox b {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+/* ─── Chat ────────────────────────────────────────────────────────*/
+.chatArea {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  min-height: 120px;
+}
+
+.chatBubbleAi,
+.chatBubbleAiStrong,
+.chatBubbleUser {
+  max-width: 88%;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  word-break: break-word;
+}
+
+.chatBubbleAi {
+  align-self: flex-start;
+  border-radius: 18px 18px 18px 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  color: var(--text-muted);
+}
+
+.chatBubbleUser {
+  align-self: flex-end;
+  border-radius: 18px 18px 6px 18px;
+  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(29, 161, 242, 0.28);
+}
+
+.chatBubbleAiStrong {
+  align-self: flex-start;
+  border-radius: 18px 18px 18px 6px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.12),
+    rgba(29, 161, 242, 0.1)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.24);
+  color: var(--text-color);
+}
+
+.chatBubbleAiStrong p {
+  margin: 0 0 0.7rem;
+}
+
+.chatBubbleAiStrong p:last-child {
+  margin-bottom: 0;
+}
+
+.aiDivider {
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  margin: 12px 0;
+}
+
+/* ─── Question input ──────────────────────────────────────────────*/
+.aiTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 96px;
+  max-height: 170px;
+  padding: 14px 15px;
+  border-radius: 18px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  outline: none;
+  margin-bottom: 12px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.aiTextarea:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+}
+
+.aiTextarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* ─── Action buttons ──────────────────────────────────────────────*/
+.aiActions {
+  display: flex;
+  gap: 10px;
+}
+
+.askButton,
+.applyButton {
+  flex: 1;
+  border: none;
+  border-radius: 16px;
+  padding: 0.9rem 1.2rem;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 150ms ease,
+    opacity 150ms ease;
+}
+
+.askButton {
+  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(29, 161, 242, 0.3);
+}
+
+.askButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 24px rgba(29, 161, 242, 0.44);
+}
+
+.askButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.applyButton {
+  background: rgba(34, 197, 94, 0.13);
+  color: var(--safe);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.applyButton:hover {
+  background: rgba(34, 197, 94, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ─── AI responsive ───────────────────────────────────────────────*/
+@media (max-width: 600px) {
+  .taggingHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .modalOverlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .aiModal {
+    width: 100%;
+    height: 92vh;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .aiModalHeader {
+    padding: 18px 18px;
+  }
+
+  .aiModalBody {
+    padding: 18px;
+  }
+
+  .currentTagBox {
+    grid-template-columns: 1fr;
+  }
+
+  .chatBubbleAi,
+  .chatBubbleAiStrong,
+  .chatBubbleUser {
+    max-width: 100%;
+  }
+
+  .aiActions {
+    flex-direction: column;
+  }
+
+  .askButton,
+  .applyButton {
+    width: 100%;
   }
 }
