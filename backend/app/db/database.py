@@ -42,7 +42,7 @@ async def close_mongo_connection():
 # --------------------------------------------------
 # Collections (existing)
 # --------------------------------------------------
-tagged_collection = db.get_collection("learning_data")
+tagged_collection = db.get_collection("processed")
 untagged_collection = db.get_collection("untagged_tweets")
 processed_collection = db.get_collection("processed_phase_II")
 users_collection = db.get_collection("users_phase_II")
