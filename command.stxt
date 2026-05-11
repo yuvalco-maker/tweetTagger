@@ -5,6 +5,10 @@
 
 pip install -r requirements.txt
 
+python -m backend.app.services.ml.trainer 
+
+python -m backend.app.services.ml.evaluate
+
 
 uvicorn backend.app.main:app --reload 
 

@@ -12,7 +12,14 @@ from backend.app.db.database import (
 from backend.app.schemas.ai_summary_schema import AIQuerySummaryInDB
 
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+def _get_client():
+    key = os.getenv("OPENAI_API_KEY")
+    if not key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="OpenAI API key not configured.",
+        )
+    return OpenAI(api_key=key)
 
 
 AI_SUMMARY_JSON_SCHEMA = {
@@ -132,7 +139,7 @@ Tweets:
 {json.dumps(tweets, ensure_ascii=False)}
 """
 
-    response = client.responses.create(
+    response = _get_client().responses.create(
         model="gpt-5.5",
         input=[
             {
