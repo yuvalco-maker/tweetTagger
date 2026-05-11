@@ -19,6 +19,7 @@ numpy
 torch
 transformers
 scikit-learn
+imbalanced-learn
 joblib
 matplotlib
 seaborn
