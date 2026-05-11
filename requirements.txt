@@ -16,3 +16,10 @@ python-multipart
 openai
 hdbscan
 numpy
+torch
+transformers
+scikit-learn
+joblib
+matplotlib
+seaborn
+pymongo
