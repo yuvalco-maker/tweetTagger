@@ -186,18 +186,25 @@ def run_training() -> dict:
 
     y_category = np.array(category_labels)
 
+    texts_arr = np.array(texts)
+
     # --- train/test split (stratify on danger) ---
     (X_train, X_test,
      yd_train, yd_test,
      yr_train, yr_test,
-     ycat_train, ycat_test) = train_test_split(
-        X, y_danger, y_relevance, y_category,
+     ycat_train, ycat_test,
+     t_train, t_test) = train_test_split(
+        X, y_danger, y_relevance, y_category, texts_arr,
         test_size=0.2, random_state=42, stratify=y_danger,
     )
 
-    # --- 1. Danger model ---
-    print("[trainer] Training danger model …")
-    danger_model = _fit_logreg(X_train, yd_train)
+    # --- 1. Danger model (TF-IDF) ---
+    print("[trainer] Training danger model (TF-IDF) …")
+    tfidf_danger = TfidfVectorizer(max_features=20000, ngram_range=(1, 2), sublinear_tf=True)
+    X_danger_train = tfidf_danger.fit_transform(t_train)
+    X_danger_test  = tfidf_danger.transform(t_test)
+    danger_model = _fit_logreg(X_danger_train, yd_train)
+    joblib.dump(tfidf_danger, MODELS_DIR / "tfidf_danger.pkl")
 
     # --- 2. Relevance model ---
     print("[trainer] Training relevance model …")
@@ -231,9 +238,10 @@ def run_training() -> dict:
     np.save(MODELS_DIR / "y_relevance_test.npy", yr_test)
     np.save(MODELS_DIR / "X_class_test.npy",     X_class_test)
     np.save(MODELS_DIR / "y_class_test.npy",     y_class_test)
+    joblib.dump(t_test.tolist(),                  MODELS_DIR / "t_test.pkl")
 
     # --- Metrics ---
-    yd_pred  = danger_model.predict(X_test)
+    yd_pred  = danger_model.predict(X_danger_test)
     yr_pred  = relevance_model.predict(X_test)
     yc_pred  = class_model.predict(X_class_test)
 
