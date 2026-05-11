@@ -1,10 +1,13 @@
 import os
+import math
 import asyncio
 from datetime import datetime, timezone
 
 from apify_client import ApifyClient
 from dotenv import load_dotenv
 from fastapi import HTTPException, status
+from bson import ObjectId
+
 from backend.app.db.database import (
     tweets_collection,
     processed_collection,
@@ -13,7 +16,11 @@ from backend.app.db.database import (
 )
 from backend.app.schemas.tweet_scheme import FetchTweetsRequest, TweetinDB
 from backend.app.services.ml.prediction_service import predict_tweets_by_query
-from bson import ObjectId
+from backend.app.services.embedding_service import (
+    create_query_embedding,
+    build_query_embedding_text,
+    OPENAI_EMBEDDING_MODEL,
+)
 
 load_dotenv()
 
@@ -79,6 +86,56 @@ def run_apify_actor(run_input: dict):
     return client.dataset(dataset_id).list_items().items
 
 
+async def build_query_stats(query_id: str):
+    cursor = processed_collection.find(
+        {
+            "query_id": query_id,
+            "is_dangerous": {"$ne": None},
+            "category": {"$ne": None},
+        }
+    )
+
+    total = 0
+    dangerous_count = 0
+    not_dangerous_count = 0
+
+    categories_total = {}
+    categories_dangerous = {}
+    categories_not_dangerous = {}
+
+    async for tweet in cursor:
+        total += 1
+
+        category = tweet.get("category") or "Unknown"
+        is_dangerous = tweet.get("is_dangerous")
+
+        categories_total[category] = categories_total.get(category, 0) + 1
+
+        if is_dangerous is True:
+            dangerous_count += 1
+            categories_dangerous[category] = (
+                categories_dangerous.get(category, 0) + 1
+            )
+        else:
+            not_dangerous_count += 1
+            categories_not_dangerous[category] = (
+                categories_not_dangerous.get(category, 0) + 1
+            )
+
+    dangerous_percentage = 0
+    if total > 0:
+        dangerous_percentage = round((dangerous_count / total) * 100, 2)
+
+    return {
+        "dangerous_count": dangerous_count,
+        "not_dangerous_count": not_dangerous_count,
+        "dangerous_percentage": dangerous_percentage,
+        "categories_total": categories_total,
+        "categories_dangerous": categories_dangerous,
+        "categories_not_dangerous": categories_not_dangerous,
+    }
+
+
 async def fetch_tweets_from_apify(
     request: FetchTweetsRequest,
     current_user: dict,
@@ -92,6 +149,31 @@ async def fetch_tweets_from_apify(
     user_id = str(current_user["_id"])
     keywords = clean_keywords(request.keywords)
 
+    embedding_text = None
+    embedding_vector = None
+    embedding_model = None
+
+    try:
+        embedding_text = build_query_embedding_text(
+            keywords=keywords,
+            language=request.language,
+            start_date=request.start_date,
+            end_date=request.end_date,
+        )
+
+        embedding_vector = await create_query_embedding(
+            keywords=keywords,
+            language=request.language,
+            start_date=request.start_date,
+            end_date=request.end_date,
+        )
+
+        if embedding_vector:
+            embedding_model = OPENAI_EMBEDDING_MODEL
+
+    except Exception as e:
+        print(f"Embedding generation failed: {e}")
+
     query_doc = {
         "keywords": keywords,
         "language": request.language,
@@ -101,7 +183,19 @@ async def fetch_tweets_from_apify(
         "requested_by": user_id,
         "requested_at": datetime.now(timezone.utc),
         "inserted_count": 0,
+        "ml_processed_count": 0,
         "status": "running",
+
+        "embedding_text": embedding_text,
+        "embedding_vector": embedding_vector,
+        "embedding_model": embedding_model,
+
+        "dangerous_count": 0,
+        "not_dangerous_count": 0,
+        "dangerous_percentage": 0,
+        "categories_total": {},
+        "categories_dangerous": {},
+        "categories_not_dangerous": {},
     }
 
     query_result = await tweet_search_queries_collection.insert_one(query_doc)
@@ -182,6 +276,7 @@ async def fetch_tweets_from_apify(
         inserted_docs.append(doc)
 
     ml_results = await predict_tweets_by_query(query_id)
+    query_stats = await build_query_stats(query_id)
 
     await tweet_search_queries_collection.update_one(
         {"_id": query_result.inserted_id},
@@ -190,6 +285,7 @@ async def fetch_tweets_from_apify(
                 "inserted_count": len(inserted_docs),
                 "ml_processed_count": len(ml_results),
                 "status": "completed",
+                **query_stats,
             }
         },
     )
@@ -235,6 +331,10 @@ async def get_my_search_queries(current_user: dict, limit: int = 50):
 
     async for doc in cursor:
         doc["_id"] = str(doc["_id"])
+
+        # לא מחזירים את הוקטור לפרונט כי הוא ענק
+        doc.pop("embedding_vector", None)
+
         queries.append(doc)
 
     return queries
@@ -271,6 +371,10 @@ async def get_queries_by_username(username: str, limit: int = 50):
     async for doc in cursor:
         doc["_id"] = str(doc["_id"])
         doc["username"] = user.get("username")
+
+        # לא מחזירים את הוקטור לפרונט כי הוא ענק
+        doc.pop("embedding_vector", None)
+
         queries.append(doc)
 
     return queries
@@ -348,37 +452,50 @@ async def get_global_processed_stats():
 
 async def get_tweet(tweet_id: str):
     tweet = await processed_collection.find_one({"tweet_id": tweet_id})
+
     if not tweet:
         raise HTTPException(status_code=404, detail="Tweet not found")
+
     tweet["_id"] = str(tweet["_id"])
     return tweet
 
 
 async def update_tweet(tweet):
-
     data = await processed_collection.find_one({"_id": ObjectId(tweet["_id"])})
+
     if not data:
         raise HTTPException(status_code=404, detail="Tweet not found")
+
     danger = tweet["is_dangerous"]
     cat = tweet["category"]
+
     if data["is_dangerous"] == danger and cat == data["category"]:
         data["_id"] = str(data["_id"])
         return data
 
     original_cat = data.get("original_category")
     original_danger = data.get("original_is_dangerous")
+
     reverted_to_original = (
         original_cat is not None
         and original_danger is not None
         and cat == original_cat
         and danger == original_danger
     )
+
     edited_flag = not reverted_to_original
 
     res = await processed_collection.update_one(
         {"_id": ObjectId(tweet["_id"])},
-        {"$set": {"category": cat, "is_dangerous": danger, "edited": edited_flag}},
+        {
+            "$set": {
+                "category": cat,
+                "is_dangerous": danger,
+                "edited": edited_flag,
+            }
+        },
     )
+
     if not res.matched_count:
         raise HTTPException(status_code=404, detail="Tweet not found")
 
@@ -386,4 +503,182 @@ async def update_tweet(tweet):
     data["is_dangerous"] = danger
     data["edited"] = edited_flag
     data["_id"] = str(data["_id"])
+
     return data
+def cosine_similarity(vec1: list[float], vec2: list[float]) -> float:
+    if not vec1 or not vec2:
+        return 0
+
+    if len(vec1) != len(vec2):
+        return 0
+
+    dot = sum(a * b for a, b in zip(vec1, vec2))
+    norm1 = math.sqrt(sum(a * a for a in vec1))
+    norm2 = math.sqrt(sum(b * b for b in vec2))
+
+    if norm1 == 0 or norm2 == 0:
+        return 0
+
+    return dot / (norm1 * norm2)
+
+
+def normalize_percentage(value):
+    if value is None:
+        return 0
+
+    return min(max(value / 100, 0), 1)
+
+
+async def get_similar_queries(query_id: str, limit: int = 5):
+    source_query = await tweet_search_queries_collection.find_one(
+        {"_id": ObjectId(query_id)}
+    )
+
+    if not source_query:
+        raise HTTPException(status_code=404, detail="Query not found")
+
+    source_embedding = source_query.get("embedding_vector")
+
+    if not source_embedding:
+        raise HTTPException(
+            status_code=400,
+            detail="This query does not have an embedding vector",
+        )
+
+    cursor = tweet_search_queries_collection.find(
+        {
+            "_id": {"$ne": ObjectId(query_id)},
+            "embedding_vector": {"$exists": True, "$ne": None},
+        }
+    )
+
+    results = []
+
+    async for other in cursor:
+        other_embedding = other.get("embedding_vector")
+
+        similarity = cosine_similarity(source_embedding, other_embedding)
+
+        dangerous_score = normalize_percentage(
+            other.get("dangerous_percentage")
+        )
+
+        final_score = round(
+            0.7 * similarity + 0.3 * dangerous_score,
+            4,
+        )
+
+        results.append(
+            {
+                "query_id": str(other["_id"]),
+                "keywords": other.get("keywords"),
+                "language": other.get("language"),
+                "start_date": other.get("start_date"),
+                "end_date": other.get("end_date"),
+                "inserted_count": other.get("inserted_count", 0),
+                "ml_processed_count": other.get("ml_processed_count", 0),
+                "dangerous_count": other.get("dangerous_count", 0),
+                "not_dangerous_count": other.get("not_dangerous_count", 0),
+                "dangerous_percentage": other.get("dangerous_percentage", 0),
+                "categories_total": other.get("categories_total", {}),
+                "categories_dangerous": other.get("categories_dangerous", {}),
+                "similarity": round(similarity, 4),
+                "final_score": final_score,
+                "reason": {
+                    "semantic_similarity": round(similarity, 4),
+                    "dangerous_score": round(dangerous_score, 4),
+                    "formula": "0.7 * semantic_similarity + 0.3 * dangerous_score",
+                },
+            }
+        )
+
+    results.sort(key=lambda x: x["final_score"], reverse=True)
+
+    return {
+        "source_query": {
+            "query_id": str(source_query["_id"]),
+            "keywords": source_query.get("keywords"),
+            "language": source_query.get("language"),
+            "start_date": source_query.get("start_date"),
+            "end_date": source_query.get("end_date"),
+        },
+        "recommendations": results[:limit],
+    }
+async def get_smart_query_suggestions(
+    request: FetchTweetsRequest,
+    limit: int = 5,
+):
+    keywords = clean_keywords(request.keywords)
+
+    source_embedding = await create_query_embedding(
+        keywords=keywords,
+        language=request.language,
+        start_date=request.start_date,
+        end_date=request.end_date,
+    )
+
+    if not source_embedding:
+        raise HTTPException(
+            status_code=400,
+            detail="Could not create embedding for this query idea",
+        )
+
+    cursor = tweet_search_queries_collection.find(
+        {
+            "embedding_vector": {"$exists": True, "$ne": None},
+        }
+    )
+
+    results = []
+
+    async for other in cursor:
+        other_embedding = other.get("embedding_vector")
+        similarity = cosine_similarity(source_embedding, other_embedding)
+
+        dangerous_percentage = other.get("dangerous_percentage") or 0
+        dangerous_score = normalize_percentage(dangerous_percentage)
+
+        final_score = round(
+            0.7 * similarity + 0.3 * dangerous_score,
+            4,
+        )
+
+        results.append(
+            {
+                "query_id": str(other["_id"]),
+                "keywords": other.get("keywords") or [],
+                "language": other.get("language") or request.language,
+                "start_date": other.get("start_date") or request.start_date,
+                "end_date": other.get("end_date") or request.end_date,
+                "max_items": other.get("max_items") or request.max_items,
+                "inserted_count": other.get("inserted_count") or 0,
+                "ml_processed_count": other.get("ml_processed_count") or 0,
+                "dangerous_count": other.get("dangerous_count") or 0,
+                "not_dangerous_count": other.get("not_dangerous_count") or 0,
+                "dangerous_percentage": dangerous_percentage,
+                "categories_total": other.get("categories_total") or {},
+                "categories_dangerous": other.get("categories_dangerous") or {},
+                "categories_not_dangerous": other.get("categories_not_dangerous") or {},
+                "similarity": round(similarity, 4),
+                "dangerous_score": round(dangerous_score, 4),
+                "final_score": final_score,
+                "reason": {
+                    "semantic_similarity": round(similarity, 4),
+                    "dangerous_score": round(dangerous_score, 4),
+                    "formula": "0.7 * semantic_similarity + 0.3 * dangerous_score",
+                },
+            }
+        )
+
+    results.sort(key=lambda item: item["final_score"], reverse=True)
+
+    return {
+        "input_query": {
+            "keywords": keywords,
+            "language": request.language,
+            "start_date": request.start_date,
+            "end_date": request.end_date,
+            "max_items": request.max_items,
+        },
+        "recommendations": results[:limit],
+    }

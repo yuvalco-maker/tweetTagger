@@ -1,0 +1,460 @@
+/* ─── Smart Query Suggestions ───────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card {
+  width: 100%;
+  max-width: 860px;
+  background: var(--card-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 2.75rem 3rem;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+}
+
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 1.75rem;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+.title {
+  margin: 0 0 0.45rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0 0 2.5rem;
+  line-height: 1.65;
+  font-size: 0.875rem;
+  max-width: 690px;
+}
+
+.results,
+.editor {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+.sectionTitle {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-color);
+}
+
+.sectionDescription {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.results .sectionTitle::before {
+  content: '2';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--brand-subtle);
+  border: 1px solid var(--brand-border);
+  color: var(--brand);
+  font-size: 0.72rem;
+  font-weight: 900;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.editor .sectionTitle::before {
+  content: '3';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: var(--safe);
+  font-size: 0.72rem;
+  font-weight: 900;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.form::before {
+  content: 'Step 1 — Describe your query';
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--brand);
+  margin-bottom: 1.25rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--brand-border);
+}
+
+.editor .form::before {
+  content: none;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1.5rem 0 1.5rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  transition: border-color 200ms ease;
+}
+
+.section:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 1.5rem 0 1.5rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  transition: border-color 200ms ease;
+}
+
+.grid:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+.label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.925rem;
+  font-family: inherit;
+  background: var(--input-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+  background: var(--input-focus-bg);
+}
+
+.input:disabled,
+.textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.submitButton {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.975rem;
+  font-weight: 800;
+  font-family: inherit;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(29, 161, 242, 0.38);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 150ms ease;
+  letter-spacing: 0.01em;
+  margin-top: 1.75rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.52);
+}
+
+.submitButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.recommendationList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommendationCard {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-3);
+  border-radius: 16px;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 180ms ease, border-color 180ms ease,
+    transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.recommendationCard:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: rgba(29, 161, 242, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+
+.recommendationCard:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.recommendationCard:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.selectedCard {
+  border-color: var(--brand);
+  background: var(--brand-subtle);
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.16), var(--shadow-pop);
+}
+
+.selectedCard::after {
+  content: 'Selected';
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--brand);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.recommendationHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.recommendationHeader strong {
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.4;
+}
+
+.scoreBadge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: rgba(29, 161, 242, 0.12);
+  border: 1px solid rgba(29, 161, 242, 0.22);
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.metaRow span::before {
+  content: '·  ';
+  opacity: 0.4;
+}
+
+.metaRow span:first-child::before {
+  content: '';
+}
+
+.cardActionHint {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.categoryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.categoryBadge {
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: var(--brand-subtle);
+  border: 1px solid var(--brand-border);
+  color: var(--brand);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.editor {
+  border: 1px solid rgba(29, 161, 242, 0.3);
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: rgba(29, 161, 242, 0.06);
+  position: relative;
+}
+
+.editor::before {
+  content: '✓ Recommendation loaded here';
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--brand);
+  margin-bottom: 1.25rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--brand-border);
+}
+
+.runButton {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.975rem;
+  font-weight: 800;
+  font-family: inherit;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(34, 197, 94, 0.34);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 150ms ease;
+  letter-spacing: 0.01em;
+  margin-top: 1.75rem;
+}
+
+.runButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(34, 197, 94, 0.48);
+}
+
+.runButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.message {
+  margin-top: 1.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--danger);
+  padding: 0.75rem 1.1rem;
+  background: rgba(231, 76, 60, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(231, 76, 60, 0.22);
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section,
+  .grid {
+    padding-left: 1rem;
+  }
+
+  .recommendationHeader {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .selectedCard::after {
+    position: static;
+    display: inline-block;
+    margin-top: 10px;
+  }
+}

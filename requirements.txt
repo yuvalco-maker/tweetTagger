@@ -13,3 +13,6 @@ google-auth
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
+openai
+hdbscan
+numpy

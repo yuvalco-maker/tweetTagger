@@ -5,8 +5,8 @@ function Home() {
   const navigate = useNavigate();
 
   const handleSearchQueryClick = () => {
-  navigate("/search-query");
-};
+    navigate("/search-query");
+  };
 
   return (
     <div className={styles.page}>
@@ -20,12 +20,18 @@ function Home() {
         <button className={styles.button} onClick={handleSearchQueryClick}>
           Search Query
         </button>
+
         <button className={styles.button} onClick={() => navigate("/query-history")}>
-  Query History
-</button>
-<button className={styles.button} onClick={() => navigate("/stats")}>
-  ML Statistics
-</button>
+          Query History
+        </button>
+
+        <button className={styles.button} onClick={() => navigate("/stats")}>
+          ML Statistics
+        </button>
+
+        <button className={styles.button} onClick={() => navigate("/threat-themes")}>
+          Threat Themes
+        </button>
       </div>
     </div>
   );
