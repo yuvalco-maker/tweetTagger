@@ -105,6 +105,12 @@ function Home() {
           All Tagged Tweets
         </button>
 
+        {isAdmin && (
+          <button className={styles.button} onClick={() => navigate("/admin")}>
+            Admin Panel
+          </button>
+        )}
+
         {isAdmin && stats && (
           <div className={styles.retrainBox}>
             <div className={styles.retrainInfo}>

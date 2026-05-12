@@ -10,6 +10,8 @@ from backend.app.services.users_services import (
     login_user,
     forgot_password,
     reset_password,
+    get_all_users,
+    promote_user,
 )
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -73,6 +75,23 @@ async def reset_password_endpoint(request: ResetPasswordRequest):
         return await reset_password(request.token, request.new_password)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@users_router.get("/all")
+async def get_users(current_user: dict = Depends(get_current_user)):
+    if not current_user.get("isADMIN"):
+        raise HTTPException(status_code=403, detail="Admin only")
+    return await get_all_users()
+
+
+@users_router.patch("/{user_id}/promote")
+async def promote(user_id: str, current_user: dict = Depends(get_current_user)):
+    try:
+        return await promote_user(user_id, current_user)
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @users_router.get("/me")
