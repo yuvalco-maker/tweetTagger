@@ -54,11 +54,6 @@ export default function TaggedTweetCard({ tweet, onClick }) {
           <span className={styles.value}>{dangerLabel(tweet.is_dangerous)}</span>
         </div>
 
-        <div className={styles.tagItem}>
-          <span className={styles.label}>tagged by</span>
-          <span className={styles.value}>{tweet.tagged_by_username || "Me"}</span>
-        </div>
-
         {tweet.locked_at && (
           <div className={styles.tagItem}>
             <span className={styles.label}>locked at</span>

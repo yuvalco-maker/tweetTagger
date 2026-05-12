@@ -6,6 +6,7 @@ from datetime import datetime
 class PredictionResult(BaseModel):
     is_dangerous: bool
     category: str
+    confidence: float
 
 
 class MLTaggedTweet(BaseModel):

@@ -14,6 +14,7 @@ import Stats from "./pages/Stats/Stats.jsx";
 import TweetDetail from "./pages/TweetDetail/TweetDetail.jsx";
 import AISummaryPage from "./pages/AISummaryPage/AISummaryPage.jsx";
 import SmartQuerySuggestions from "./pages/SmartQuerySuggestions/SmartQuerySuggestions";
+import AllTweets from "./pages/AllTweets/AllTweets.jsx";
 function AppLayout() {
   return (
     <>
@@ -47,6 +48,7 @@ function App() {
           <Route path="/ai-summary/:queryId" element={<AISummaryPage />} />
           <Route path="/smart-query-suggestions" element={<SmartQuerySuggestions />} />
           <Route path="/threat-themes" element={<ThreatThemes />} />
+          <Route path="/all-tweets" element={<AllTweets />} />
         </Route>
       </Routes>
     </Router>

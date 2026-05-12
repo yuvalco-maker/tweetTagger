@@ -15,6 +15,7 @@ async def predict_tweet_by_id(tweet_id: str, collection=processed_collection):
             "$set": {
                 "is_dangerous": prediction.is_dangerous,
                 "category": prediction.category,
+                "confidence": prediction.confidence,
                 "status": "ml_tagged",
             }
         },
@@ -22,6 +23,7 @@ async def predict_tweet_by_id(tweet_id: str, collection=processed_collection):
 
     tweet["is_dangerous"] = prediction.is_dangerous
     tweet["category"] = prediction.category
+    tweet["confidence"] = prediction.confidence
     tweet["original_is_dangerous"] = prediction.is_dangerous
     tweet["original_category"] = prediction.category
     tweet["status"] = "ml_tagged"
@@ -55,6 +57,7 @@ async def predict_tweets_by_query(query_id: str):
                 "$set": {
                     "is_dangerous": prediction.is_dangerous,
                     "category": prediction.category,
+                    "confidence": prediction.confidence,
                     "original_category": prediction.category,
                     "status": "ml_tagged",
                 }
@@ -63,6 +66,7 @@ async def predict_tweets_by_query(query_id: str):
 
         tweet["is_dangerous"] = prediction.is_dangerous
         tweet["category"] = prediction.category
+        tweet["confidence"] = prediction.confidence
         tweet["original_is_dangerous"] = prediction.is_dangerous
         tweet["original_category"] = prediction.category
         tweet["status"] = "ml_tagged"

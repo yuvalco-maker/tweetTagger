@@ -32,6 +32,10 @@ function Home() {
         <button className={styles.button} onClick={() => navigate("/threat-themes")}>
           Threat Themes
         </button>
+
+        <button className={styles.button} onClick={() => navigate("/all-tweets")}>
+          All Tagged Tweets
+        </button>
       </div>
     </div>
   );
