@@ -13,6 +13,7 @@ from backend.app.db.database import (
     processed_collection,
     tweet_search_queries_collection,
     users_collection,
+    model_stats_collection,
 )
 from backend.app.schemas.tweet_scheme import FetchTweetsRequest, TweetinDB
 from backend.app.services.ml.prediction_service import predict_tweets_by_query
@@ -518,6 +519,20 @@ async def update_tweet(tweet, user_id: str | None = None):
 
     if not res.matched_count:
         raise HTTPException(status_code=404, detail="Tweet not found")
+
+    was_edited = bool(data.get("edited"))
+    if edited_flag and not was_edited:
+        await model_stats_collection.update_one(
+            {"_id": "singleton"},
+            {"$inc": {"edit_count": 1}},
+            upsert=True,
+        )
+    elif not edited_flag and was_edited:
+        await model_stats_collection.update_one(
+            {"_id": "singleton"},
+            {"$inc": {"edit_count": -1}},
+            upsert=True,
+        )
 
     data["category"] = cat
     data["is_dangerous"] = danger
