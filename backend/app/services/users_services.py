@@ -75,11 +75,13 @@ async def register_user_def(user_in: createDefaultUser):
     if existing_user:
         raise ValueError("User already exists")
 
+    is_first = await users_collection.count_documents({}) == 0
+
     user_dict = {
         "username": user_in.username,
         "email": user_in.email,
         "password": hash_password(user_in.password),
-        "isADMIN": False,
+        "isADMIN": is_first,
         "provider": "local",
     }
 
@@ -169,6 +171,7 @@ async def continue_with_google(user_in: createGoogleUser):
                 user = await users_collection.find_one({"_id": user["_id"]})
 
             else:
+                is_first = await users_collection.count_documents({}) == 0
                 new_user = {
                     "google_id": google_id,
                     "email": email,
@@ -176,7 +179,7 @@ async def continue_with_google(user_in: createGoogleUser):
                     "provider": "google",
                     "profile_pic": profile_pic,
                     "password": None,
-                    "isADMIN": False,
+                    "isADMIN": is_first,
                 }
 
                 result = await users_collection.insert_one(new_user)
@@ -316,3 +319,29 @@ async def reset_password(token: str, new_password: str):
     )
 
     return {"message": "Password has been reset successfully"}
+
+
+async def get_all_users():
+    cursor = users_collection.find({}, {"password": 0})
+    users = []
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        users.append(doc)
+    return users
+
+
+async def promote_user(user_id: str, current_user: dict):
+    if not current_user.get("isADMIN"):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin only")
+
+    try:
+        oid = ObjectId(user_id)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid user id")
+
+    user = await users_collection.find_one({"_id": oid})
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    await users_collection.update_one({"_id": oid}, {"$set": {"isADMIN": True}})
+    return {"message": f"{user['username']} promoted to admin"}
