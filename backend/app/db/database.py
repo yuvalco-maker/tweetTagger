@@ -69,3 +69,8 @@ tweet_search_queries_collection = db.get_collection("tweet_search_queries")
 # 🤖 AI summaries per query
 # --------------------------------------------------
 ai_query_summaries_collection = db.get_collection("ai_query_summaries")
+
+# --------------------------------------------------
+# 🔄 Model training stats
+# --------------------------------------------------
+model_stats_collection = db.get_collection("model_stats")
