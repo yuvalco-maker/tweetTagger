@@ -10,6 +10,7 @@ from backend.app.services.tweet_fetch_service import (
     get_my_tweets_by_query,
     get_queries_by_username,
     get_global_processed_stats,
+    get_all_processed_tweets,
     get_tweet,
     update_tweet,
     get_similar_queries,
@@ -112,6 +113,18 @@ async def get_global_stats(
         )
 
 
+@tweet_fetch_router.get("/all-processed")
+async def on_get_all_processed(
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=50, ge=1, le=200),
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_all_processed_tweets(skip, limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
 @tweet_fetch_router.get("/tweet/{tweet_id}")
 async def on_get_tweet(
     tweet_id: str,
@@ -135,7 +148,7 @@ async def on_update_tweet(
     try:
         tweet_data = tweet.model_dump()
         tweet_data["_id"] = tweet_id
-        return await update_tweet(tweet_data)
+        return await update_tweet(tweet_data, user_id=str(current_user["_id"]))
     except HTTPException as he:
         raise he
     except Exception as e:

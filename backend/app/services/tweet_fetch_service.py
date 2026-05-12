@@ -450,6 +450,24 @@ async def get_global_processed_stats():
     }
 
 
+_HIDDEN_FIELDS = {"tagged_by"}
+
+def _clean(doc: dict) -> dict:
+    for f in _HIDDEN_FIELDS:
+        doc.pop(f, None)
+    return doc
+
+
+async def get_all_processed_tweets(skip: int = 0, limit: int = 50):
+    total = await processed_collection.count_documents({})
+    cursor = processed_collection.find({}).sort("fetched_at", -1).skip(skip).limit(limit)
+    tweets = []
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        tweets.append(_clean(doc))
+    return {"tweets": tweets, "total": total}
+
+
 async def get_tweet(tweet_id: str):
     tweet = await processed_collection.find_one({"tweet_id": tweet_id})
 
@@ -457,10 +475,10 @@ async def get_tweet(tweet_id: str):
         raise HTTPException(status_code=404, detail="Tweet not found")
 
     tweet["_id"] = str(tweet["_id"])
-    return tweet
+    return _clean(tweet)
 
 
-async def update_tweet(tweet):
+async def update_tweet(tweet, user_id: str | None = None):
     data = await processed_collection.find_one({"_id": ObjectId(tweet["_id"])})
 
     if not data:
@@ -471,7 +489,7 @@ async def update_tweet(tweet):
 
     if data["is_dangerous"] == danger and cat == data["category"]:
         data["_id"] = str(data["_id"])
-        return data
+        return _clean(data)
 
     original_cat = data.get("original_category")
     original_danger = data.get("original_is_dangerous")
@@ -485,15 +503,17 @@ async def update_tweet(tweet):
 
     edited_flag = not reverted_to_original
 
+    fields = {
+        "category": cat,
+        "is_dangerous": danger,
+        "edited": edited_flag,
+    }
+    if user_id:
+        fields["tagged_by"] = user_id
+
     res = await processed_collection.update_one(
         {"_id": ObjectId(tweet["_id"])},
-        {
-            "$set": {
-                "category": cat,
-                "is_dangerous": danger,
-                "edited": edited_flag,
-            }
-        },
+        {"$set": fields},
     )
 
     if not res.matched_count:
@@ -504,7 +524,7 @@ async def update_tweet(tweet):
     data["edited"] = edited_flag
     data["_id"] = str(data["_id"])
 
-    return data
+    return _clean(data)
 def cosine_similarity(vec1: list[float], vec2: list[float]) -> float:
     if not vec1 or not vec2:
         return 0

@@ -68,16 +68,18 @@ def predict_from_text(text: str) -> PredictionResult:
 
     # 3. If dangerous → skip relevance, go straight to class model
     if is_dangerous:
-        class_idx = _class_model.predict(embedding)[0]
+        class_proba = _class_model.predict_proba(embedding)[0]
+        class_idx = int(class_proba.argmax())
         category = _class_encoder.inverse_transform([class_idx])[0]
-        return PredictionResult(is_dangerous=True, category=category)
+        return PredictionResult(is_dangerous=True, category=category, confidence=round(float(danger_prob), 4))
 
     # 4. Safe → check relevance
     is_relevant = bool(_relevance_model.predict(embedding)[0] == 1)
     if not is_relevant:
-        return PredictionResult(is_dangerous=False, category="Other")
+        return PredictionResult(is_dangerous=False, category="Other", confidence=round(1 - float(danger_prob), 4))
 
     # 5. Relevant + safe → classify
-    class_idx = _class_model.predict(embedding)[0]
+    class_proba = _class_model.predict_proba(embedding)[0]
+    class_idx = int(class_proba.argmax())
     category = _class_encoder.inverse_transform([class_idx])[0]
-    return PredictionResult(is_dangerous=False, category=category)
+    return PredictionResult(is_dangerous=False, category=category, confidence=round(float(class_proba.max()), 4))
