@@ -472,6 +472,9 @@ async def get_all_processed_tweets(skip: int = 0, limit: int = 50):
 async def get_tweet(tweet_id: str):
     tweet = await processed_collection.find_one({"tweet_id": tweet_id})
 
+    if not tweet and ObjectId.is_valid(tweet_id):
+        tweet = await processed_collection.find_one({"_id": ObjectId(tweet_id)})
+
     if not tweet:
         raise HTTPException(status_code=404, detail="Tweet not found")
 

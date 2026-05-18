@@ -191,6 +191,69 @@
   margin-top: 30px;
 }
 
+.reviewsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.reviewsHeader h2 {
+  margin: 0;
+}
+
+.applyAllButton {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.applyAllButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.applyButton {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--brand);
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.applyButton:hover:not(:disabled) {
+  background: var(--brand);
+  color: #fff;
+}
+
+.applyButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.applyButtonDone {
+  margin-top: 12px;
+  background: rgba(22, 163, 74, 0.13);
+  color: var(--safe);
+  border: 1px solid rgba(22, 163, 74, 0.28);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
 .reviewList {
   display: flex;
   flex-direction: column;
