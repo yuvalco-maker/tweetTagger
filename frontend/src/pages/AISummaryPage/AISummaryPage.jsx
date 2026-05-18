@@ -35,6 +35,72 @@ export default function AISummaryPage() {
   const [query, setQuery] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [applyingAll, setApplyingAll] = useState(false);
+  const [applyingIndex, setApplyingIndex] = useState(null);
+  const [appliedIndices, setAppliedIndices] = useState(new Set());
+
+  const patchTweet = async (dbId, aiCategory, aiIsDangerous, token) => {
+    const getRes = await fetch(`${SERVER_URL}/tweet-fetch/tweet/${dbId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!getRes.ok) return false;
+    const full = await getRes.json();
+    const patchRes = await fetch(`${SERVER_URL}/tweet-fetch/tweet/${dbId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ ...full, category: aiCategory, is_dangerous: aiIsDangerous }),
+    });
+    return patchRes.ok;
+  };
+
+  const syncReviewToAI = (index) => {
+    setSummary((prev) => {
+      const reviews = [...prev.tweet_reviews];
+      reviews[index] = {
+        ...reviews[index],
+        model_is_dangerous: reviews[index].ai_is_dangerous,
+        model_category: reviews[index].ai_category,
+        ai_agrees_with_model: true,
+        disagreement_reason: null,
+      };
+      return { ...prev, tweet_reviews: reviews };
+    });
+  };
+
+  const applyReview = async (review, index, e) => {
+    e.stopPropagation();
+    const token = localStorage.getItem("token");
+    if (!review.db_id) return;
+    setApplyingIndex(index);
+    try {
+      const ok = await patchTweet(review.db_id, review.ai_category, review.ai_is_dangerous, token);
+      if (ok) {
+        setAppliedIndices((prev) => new Set(prev).add(index));
+        syncReviewToAI(index);
+      }
+    } finally {
+      setApplyingIndex(null);
+    }
+  };
+
+  const applyAll = async () => {
+    if (!summary?.tweet_reviews) return;
+    setApplyingAll(true);
+    const token = localStorage.getItem("token");
+    const results = new Set(appliedIndices);
+    await Promise.all(
+      summary.tweet_reviews.map(async (review, index) => {
+        if (!review.db_id) return;
+        const ok = await patchTweet(review.db_id, review.ai_category, review.ai_is_dangerous, token);
+        if (ok) {
+          results.add(index);
+          syncReviewToAI(index);
+        }
+      })
+    );
+    setAppliedIndices(results);
+    setApplyingAll(false);
+  };
 
   useEffect(() => {
     const fetchPageData = async () => {
@@ -168,7 +234,16 @@ export default function AISummaryPage() {
           </section>
 
           <section className={styles.reviewsSection}>
-            <h2>Tweet reviews</h2>
+            <div className={styles.reviewsHeader}>
+              <h2>Tweet reviews</h2>
+              <button
+                className={styles.applyAllButton}
+                onClick={applyAll}
+                disabled={applyingAll}
+              >
+                {applyingAll ? "Applying..." : "Apply all AI suggestions"}
+              </button>
+            </div>
 
             <div className={styles.reviewList}>
               {summary.tweet_reviews?.map((review, index) => (
@@ -245,6 +320,22 @@ export default function AISummaryPage() {
                           {review.disagreement_reason}
                         </p>
                       )}
+
+                    <button
+                      className={
+                        appliedIndices.has(index)
+                          ? styles.applyButtonDone
+                          : styles.applyButton
+                      }
+                      onClick={(e) => applyReview(review, index, e)}
+                      disabled={applyingIndex === index || appliedIndices.has(index)}
+                    >
+                      {applyingIndex === index
+                        ? "Applying..."
+                        : appliedIndices.has(index)
+                        ? "Applied"
+                        : "Apply AI suggestion"}
+                    </button>
                   </div>
                 </article>
               ))}
