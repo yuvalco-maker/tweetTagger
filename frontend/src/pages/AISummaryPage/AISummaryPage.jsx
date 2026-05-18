@@ -172,7 +172,7 @@ export default function AISummaryPage() {
 
             <div className={styles.reviewList}>
               {summary.tweet_reviews?.map((review, index) => (
-                <article key={index} className={styles.reviewCard}>
+                <article onClick={()=>review.tweet_id&& navigate(`/tweet-detail/${review.tweet_id}`)} key={index} className={styles.reviewCard}>
                   <div className={styles.reviewTop}>
                     <span
                       className={
@@ -195,6 +195,7 @@ export default function AISummaryPage() {
                     >
                       {formatDanger(review.ai_is_dangerous)}
                     </span>
+                    
                   </div>
 
                   <div className={styles.tweetBox}>
