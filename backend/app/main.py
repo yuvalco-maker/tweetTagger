@@ -11,6 +11,7 @@ from backend.app.controller.tweet_fetch_controller import tweet_fetch_router
 from backend.app.controller.ai_consult_controller import ai_consult_router
 from backend.app.controller.threat_theme_controller import threat_theme_router
 from backend.app.controller.admin_controller import admin_router
+from backend.app.controller.review_queue_controller import review_queue_router
 
 load_dotenv()
 
@@ -51,6 +52,7 @@ app.include_router(ai_summary_router)
 app.include_router(ai_consult_router)
 app.include_router(threat_theme_router)
 app.include_router(admin_router)
+app.include_router(review_queue_router)
 @app.get("/health")
 async def health():
     return {"status": "alive", "database": "connected"}

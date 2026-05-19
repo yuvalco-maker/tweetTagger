@@ -24,3 +24,4 @@ joblib
 matplotlib
 seaborn
 pymongo
+pulp
