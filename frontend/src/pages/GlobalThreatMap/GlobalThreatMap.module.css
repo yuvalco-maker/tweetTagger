@@ -1,0 +1,82 @@
+.page {
+  min-height: 100vh;
+  padding: 0 0 48px;
+}
+
+.header {
+  width: 100%;
+  padding: 28px 40px 24px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  margin: 8px 0 4px;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+.mapSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Make the global map taller than the per-query map */
+.mapSection :global(.leaflet-container) {
+  height: 520px !important;
+}
+
+.message {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  padding: 0 40px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .header { padding: 20px 20px 18px; margin-bottom: 20px; }
+  .header h1 { font-size: 1.5rem; }
+  .mapSection, .message { padding: 0 20px; }
+  .mapSection :global(.leaflet-container) { height: 380px !important; }
+}
+
+@media (max-width: 480px) {
+  .header { padding: 16px 14px 14px; margin-bottom: 14px; }
+  .header h1 { font-size: 1.3rem; }
+  .mapSection, .message { padding: 0 14px; }
+  .mapSection :global(.leaflet-container) { height: 300px !important; }
+}

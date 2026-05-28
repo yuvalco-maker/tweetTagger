@@ -9,7 +9,7 @@ const SERVER_URL =
 function formatDanger(value) {
   if (value === true) return "Dangerous";
   if (value === false) return "Not dangerous";
-  return "Unknown";
+  return "—";
 }
 
 function formatCategory(value) {

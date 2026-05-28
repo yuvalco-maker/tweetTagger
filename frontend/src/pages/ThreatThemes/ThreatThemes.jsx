@@ -18,6 +18,13 @@ const SERVER_URL =
 
 const CATEGORIES = ["Oil", "Gas", "Electricity", "Other"];
 
+const CATEGORY_COLORS = {
+  Oil: "#f59e0b",
+  Gas: "#06b6d4",
+  Electricity: "#6366f1",
+  Other: "#10b981",
+};
+
 const CLUSTER_COLORS = [
   "#6366f1",
   "#06b6d4",
@@ -37,6 +44,7 @@ function getClusterColor(clusterId, index) {
 export default function ThreatThemes() {
   const navigate = useNavigate();
 
+  const [mode, setMode] = useState("category");
   const [category, setCategory] = useState("Oil");
   const [limit, setLimit] = useState(100);
   const [minClusterSize, setMinClusterSize] = useState(2);
@@ -63,17 +71,15 @@ export default function ThreatThemes() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${SERVER_URL}/threat-themes/cluster?category=${encodeURIComponent(
-          category
-        )}&limit=${limit}&min_cluster_size=${minClusterSize}&min_samples=${minSamples}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const url =
+        mode === "all"
+          ? `${SERVER_URL}/threat-themes/cluster-all?limit=${limit}&min_cluster_size=${minClusterSize}&min_samples=${minSamples}`
+          : `${SERVER_URL}/threat-themes/cluster?category=${encodeURIComponent(category)}&limit=${limit}&min_cluster_size=${minClusterSize}&min_samples=${minSamples}`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const result = await response.json().catch(() => ({}));
 
@@ -108,26 +114,48 @@ export default function ThreatThemes() {
 
         <h1 className={styles.title}>Threat Themes</h1>
         <p className={styles.subtitle}>
-          Cluster dangerous tweets by category. The graph shows the 2D projection
-          of tweet embeddings, and the list below shows tweets grouped by cluster.
+          {mode === "all"
+            ? "Cluster all dangerous tweets together across categories. The graph shows how threats group semantically regardless of their category."
+            : "Cluster dangerous tweets by category. The graph shows the 2D projection of tweet embeddings, grouped by cluster."}
         </p>
 
+        <div className={styles.modeToggle}>
+          <button
+            type="button"
+            className={mode === "category" ? styles.modeActive : styles.modeBtn}
+            onClick={() => { setMode("category"); setData(null); }}
+            disabled={loading}
+          >
+            By category
+          </button>
+          <button
+            type="button"
+            className={mode === "all" ? styles.modeActive : styles.modeBtn}
+            onClick={() => { setMode("all"); setData(null); }}
+            disabled={loading}
+          >
+            All dangerous
+          </button>
+        </div>
+
         <form className={styles.controls} onSubmit={handleCluster}>
-          <div>
-            <label className={styles.label}>Category</label>
-            <select
-              className={styles.input}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              disabled={loading}
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
+          {mode === "category" && (
+            <div>
+              <label className={styles.label}>Category</label>
+              <select
+                className={styles.input}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                disabled={loading}
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label className={styles.label}>Limit</label>
@@ -214,6 +242,20 @@ export default function ThreatThemes() {
                                 ? "Noise"
                                 : `Threat theme ${item.cluster_id}`}
                             </strong>
+                            {mode === "all" && item.category && (
+                              <span
+                                className={styles.tooltipCategory}
+                                style={{
+                                  background:
+                                    CATEGORY_COLORS[item.category] + "22",
+                                  borderColor:
+                                    CATEGORY_COLORS[item.category] + "55",
+                                  color: CATEGORY_COLORS[item.category],
+                                }}
+                              >
+                                {item.category}
+                              </span>
+                            )}
                             <p>{item.content}</p>
                           </div>
                         );
@@ -285,6 +327,20 @@ export default function ThreatThemes() {
                       <div className={styles.tweetMeta}>
                         <span>@{tweet.username || "unknown"}</span>
                         <span>{tweet.created_at?.slice(0, 10)}</span>
+                        {mode === "all" && tweet.category && (
+                          <span
+                            className={styles.categoryTag}
+                            style={{
+                              background:
+                                CATEGORY_COLORS[tweet.category] + "22",
+                              borderColor:
+                                CATEGORY_COLORS[tweet.category] + "55",
+                              color: CATEGORY_COLORS[tweet.category],
+                            }}
+                          >
+                            {tweet.category}
+                          </span>
+                        )}
                         {tweet.url && (
                           <a href={tweet.url} target="_blank" rel="noreferrer">
                             Open tweet

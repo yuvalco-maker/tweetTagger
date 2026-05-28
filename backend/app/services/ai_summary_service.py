@@ -93,7 +93,9 @@ async def get_or_create_ai_summary_for_query(query_id: str, current_user: dict):
     if existing:
         return AIQuerySummaryInDB.from_mongo(existing)
 
-    cursor = processed_collection.find({"query_id": query_id}).sort("fetched_at", -1)
+    cursor = processed_collection.find(
+        {"query_id": query_id, "is_dangerous": {"$ne": None}}
+    ).sort("fetched_at", -1)
 
     tweets = []
 

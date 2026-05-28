@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 
@@ -37,6 +37,7 @@ class MLTaggedTweet(BaseModel):
     confidence: Optional[float] = None
     status: Optional[str] = None
     edited: Optional[bool] = False
+    coordinates: Optional[List[dict]] = None
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
