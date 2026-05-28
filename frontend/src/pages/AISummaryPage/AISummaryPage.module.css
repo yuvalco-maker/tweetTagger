@@ -45,20 +45,25 @@
 }
 
 .backButton {
-  border: none;
-  border-radius: 12px;
-  padding: 11px 16px;
-  background: var(--text-color);
-  color: var(--bg-color);
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--card-surface);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 150ms ease;
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
 
 .backButton:hover {
-  opacity: 0.85;
+  background: var(--surface-2);
+  border-color: rgba(29, 161, 242, 0.30);
+  transform: translateX(-2px);
 }
 
 .queryBox {

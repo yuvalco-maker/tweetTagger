@@ -24,11 +24,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  transition: background 0.25s ease, transform 0.2s ease;
+  color: var(--text-muted);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
 }
 
-.icon.active {
-  background: rgba(29, 161, 242, 0.2);
-  transform: scale(1.1);
+/* Sun — warm amber when active */
+.icon:first-child.active {
+  background: rgba(251, 191, 36, 0.18);
+  color: #f59e0b;
+  transform: scale(1.1) rotate(20deg);
+}
+
+/* Moon — cool blue when active */
+.icon:last-child.active {
+  background: rgba(99, 102, 241, 0.18);
+  color: #818cf8;
+  transform: scale(1.1) rotate(-12deg);
 }
