@@ -2,6 +2,7 @@ from backend.app.db.database import tweets_collection, processed_collection
 from backend.app.services.ml.predictor import predict_from_text
 from backend.app.schemas.ml_schema import MLTaggedTweet
 from backend.app.services.tweet_services import getTweetFromCollection
+from backend.app.services.location_extraction_service import extract_locations_from_tweet
 
 
 async def predict_tweet_by_id(tweet_id: str, collection=processed_collection):
@@ -51,6 +52,11 @@ async def predict_tweets_by_query(query_id: str):
     async for tweet in cursor:
         prediction = predict_from_text(tweet["content"])
 
+        locations = None
+        if prediction.is_dangerous:
+            extracted = await extract_locations_from_tweet(tweet["content"])
+            locations = extracted if extracted else None
+
         await tweets_collection.update_one(
             {"_id": tweet["_id"]},
             {
@@ -60,6 +66,7 @@ async def predict_tweets_by_query(query_id: str):
                     "confidence": prediction.confidence,
                     "original_category": prediction.category,
                     "status": "ml_tagged",
+                    "coordinates": locations,
                 }
             },
         )
@@ -70,6 +77,7 @@ async def predict_tweets_by_query(query_id: str):
         tweet["original_is_dangerous"] = prediction.is_dangerous
         tweet["original_category"] = prediction.category
         tweet["status"] = "ml_tagged"
+        tweet["coordinates"] = locations
         tweet["_id"] = str(tweet["_id"])
 
         data = MLTaggedTweet(**tweet).model_dump(by_alias=True)

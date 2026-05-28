@@ -14,8 +14,12 @@ import Stats from "./pages/Stats/Stats.jsx";
 import TweetDetail from "./pages/TweetDetail/TweetDetail.jsx";
 import AISummaryPage from "./pages/AISummaryPage/AISummaryPage.jsx";
 import SmartQuerySuggestions from "./pages/SmartQuerySuggestions/SmartQuerySuggestions";
+import MABSuggestions from "./pages/MABSuggestions/MABSuggestions";
 import AllTweets from "./pages/AllTweets/AllTweets.jsx";
 import AdminPanel from "./pages/AdminPanel/AdminPanel.jsx";
+import LocationTweets from "./pages/LocationTweets/LocationTweets.jsx";
+import GlobalThreatMap from "./pages/GlobalThreatMap/GlobalThreatMap.jsx";
+import UserActivity from "./pages/UserActivity/UserActivity.jsx";
 function AppLayout() {
   return (
     <>
@@ -48,9 +52,14 @@ function App() {
           <Route path="/tweet-detail/:tweetId" element={<TweetDetail />} />
           <Route path="/ai-summary/:queryId" element={<AISummaryPage />} />
           <Route path="/smart-query-suggestions" element={<SmartQuerySuggestions />} />
+          <Route path="/mab-suggestions" element={<MABSuggestions />} />
           <Route path="/threat-themes" element={<ThreatThemes />} />
           <Route path="/all-tweets" element={<AllTweets />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/location-tweets/:queryId" element={<LocationTweets />} />
+          <Route path="/location-tweets" element={<LocationTweets />} />
+          <Route path="/threat-map" element={<GlobalThreatMap />} />
+          <Route path="/user-activity" element={<UserActivity />} />
         </Route>
       </Routes>
     </Router>

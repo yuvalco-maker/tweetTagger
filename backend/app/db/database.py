@@ -74,3 +74,4 @@ ai_query_summaries_collection = db.get_collection("ai_query_summaries")
 # 🔄 Model training stats
 # --------------------------------------------------
 model_stats_collection = db.get_collection("model_stats")
+mab_arms_collection = db.get_collection("mab_arms")

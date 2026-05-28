@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./TweetDetail.module.css";
+import TweetMap from "../../components/TweetMap/TweetMap.jsx";
 
 const SERVER_URL =
   import.meta.env.VITE_SERVER_URL ||
@@ -226,6 +227,8 @@ export default function TweetDetail() {
             View original tweet ↗
           </a>
         )}
+
+        <TweetMap coordinates={tweet.coordinates} />
 
         <div className={styles.divider} />
 

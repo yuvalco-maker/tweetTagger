@@ -1,16 +1,16 @@
-/* ─── Home dashboard ────────────────────────────────────────────── */
-
+/* ─── Page shell ─────────────────────────────────────────────────── */
 .page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 40px 24px;
+  align-items: flex-start;
+  padding: 48px 24px 64px;
 }
 
+/* ─── Card ───────────────────────────────────────────────────────── */
 .card {
   width: 100%;
-  max-width: 720px;
+  max-width: 780px;
   background: var(--card-surface);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
@@ -18,101 +18,147 @@
   border-radius: 28px;
   padding: 2.75rem 2.5rem;
   box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
-
-  /* 2-column grid: title & description full-width, then buttons 2-up */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
-/* ─── Header copy ─────────────────────────────────────────────────*/
+/* ─── Hero header ────────────────────────────────────────────────── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .title {
-  grid-column: 1 / -1;
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   margin: 0;
   color: var(--text-color);
-  line-height: 1.15;
+  line-height: 1.1;
 }
 
-.description {
-  grid-column: 1 / -1;
+.subtitle {
+  margin: 0;
   color: var(--text-muted);
-  margin: 0 0 0.5rem;
-  line-height: 1.65;
   font-size: 0.9rem;
+  line-height: 1.55;
 }
 
-/* ─── Action buttons (become grid cells) ─────────────────────────*/
-.button {
+/* ─── Navigation grid ────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ─── Base nav button ────────────────────────────────────────────── */
+.navBtn {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 1.35rem 1.4rem;
+  padding: 16px 18px;
   border: 1px solid var(--border-soft);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--surface-3);
   color: var(--text-color);
-  font-size: 0.875rem;
-  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   text-align: left;
-  min-height: 82px;
-  transition: background 200ms ease, border-color 200ms ease,
-              transform 200ms ease, box-shadow 200ms ease;
+  transition: background 180ms ease, border-color 180ms ease,
+              transform 180ms ease, box-shadow 180ms ease;
 }
 
-/* Push the → arrow to the far right */
-.button::after {
-  content: '→';
-  margin-left: auto;
-  opacity: 0.35;
-  font-size: 1rem;
-  flex-shrink: 0;
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-
-/* Per-button icon via ::before */
-.button::before {
-  font-size: 1.55rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.button:nth-of-type(1)::before { content: '🔍'; }
-.button:nth-of-type(2)::before { content: '📋'; }
-.button:nth-of-type(3)::before { content: '📊'; }
-
-/* Third button spans both columns */
-.button:last-child {
-  grid-column: 1 / -1;
-  min-height: 66px;
-}
-
-/* Hover */
-.button:hover {
+.navBtn:hover {
   background: var(--brand-subtle);
   border-color: var(--brand-border);
   transform: translateY(-2px);
   box-shadow: var(--shadow-soft);
 }
 
-.button:hover::after {
-  opacity: 0.9;
-  transform: translateX(4px);
-}
-
-.button:active {
+.navBtn:active {
   transform: translateY(0);
 }
 
-/* ─── Retrain box (admin only) ───────────────────────────────────*/
-.retrainBox {
+/* ─── Primary button (Search Query) — spans full width ───────────── */
+.navBtnPrimary {
   grid-column: 1 / -1;
-  margin-top: 8px;
+  background: var(--brand-subtle);
+  border-color: var(--brand-border);
+  padding: 20px 22px;
+}
+
+.navBtnPrimary:hover {
+  background: var(--brand-subtle);
+  filter: brightness(1.08);
+}
+
+.navBtnPrimary .navLabel {
+  font-size: 1rem;
+}
+
+/* ─── Admin button — spans full width, muted accent ─────────────── */
+.navBtnAdmin {
+  grid-column: 1 / -1;
+  border-color: rgba(100, 100, 120, 0.25);
+  background: rgba(100, 100, 120, 0.06);
+}
+
+.navBtnAdmin:hover {
+  background: rgba(100, 100, 120, 0.12);
+  border-color: rgba(100, 100, 120, 0.4);
+}
+
+/* ─── Button internals ───────────────────────────────────────────── */
+.navIcon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.navText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.navLabel {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navDesc {
+  font-size: 0.77rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navArrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0.3;
+  font-size: 0.95rem;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.navBtn:hover .navArrow,
+.navBtnPrimary:hover .navArrow {
+  opacity: 0.85;
+  transform: translateX(4px);
+}
+
+/* ─── Admin retrain box ──────────────────────────────────────────── */
+.retrainBox {
   padding: 1.25rem 1.4rem;
   border: 1px solid var(--border-soft);
   border-radius: 18px;
@@ -126,7 +172,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
 }
 
@@ -147,32 +193,31 @@
 .retrainButton:hover:not(:disabled) { opacity: 0.85; }
 .retrainButton:disabled { opacity: 0.4; cursor: default; }
 
-.retrainMsg {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
+.retrainMsg  { margin: 0; font-size: 0.82rem; color: var(--text-muted); }
+.retrainError { margin: 0; font-size: 0.82rem; color: #ef4444; }
 
-.retrainError {
-  margin: 0;
-  font-size: 0.82rem;
-  color: #ef4444;
-}
-
-/* ─── Responsive ──────────────────────────────────────────────────*/
+/* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 560px) {
   .page {
-    padding: 24px 16px;
-    align-items: flex-start;
+    padding: 24px 16px 48px;
   }
 
   .card {
-    grid-template-columns: 1fr;
     padding: 2rem 1.5rem;
     border-radius: 22px;
+    gap: 22px;
   }
 
-  .button:last-child {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navBtnPrimary,
+  .navBtnAdmin {
     grid-column: 1;
+  }
+
+  .navDesc {
+    white-space: normal;
   }
 }

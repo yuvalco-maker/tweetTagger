@@ -12,6 +12,7 @@ from backend.app.services.users_services import (
     reset_password,
     get_all_users,
     promote_user,
+    get_user_activity,
 )
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -92,6 +93,16 @@ async def promote(user_id: str, current_user: dict = Depends(get_current_user)):
         raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@users_router.get("/{username}/activity")
+async def user_activity(username: str, current_user: dict = Depends(get_current_user)):
+    if not current_user.get("isADMIN"):
+        raise HTTPException(status_code=403, detail="Admin only")
+    try:
+        return await get_user_activity(username)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @users_router.get("/me")

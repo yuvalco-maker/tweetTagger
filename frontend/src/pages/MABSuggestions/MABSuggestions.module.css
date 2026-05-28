@@ -1,0 +1,600 @@
+/* ─── MAB Suggestions ────────────────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  padding: 40px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  background: var(--card-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border-color);
+  border-radius: 24px;
+  padding: 2.75rem 3rem;
+  box-shadow: var(--card-shadow-base), var(--card-shadow-glow);
+}
+
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 1.75rem;
+  transition: color 150ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.backButton:hover {
+  color: var(--text-color);
+}
+
+.title {
+  margin: 0 0 0.45rem;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-color);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0 0 2.5rem;
+  line-height: 1.65;
+  font-size: 0.875rem;
+  max-width: 640px;
+}
+
+/* ─── Step labels ─────────────────────────────────────────────────*/
+.stepLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-color);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5rem;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--brand-subtle);
+  border: 1.5px solid var(--brand-border);
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* ─── Step sections ───────────────────────────────────────────────*/
+.stepSection {
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seedSection {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1.25rem 1.25rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface-3);
+}
+
+/* ─── Arm grid ────────────────────────────────────────────────────*/
+.armGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.armCard {
+  position: relative;
+  text-align: left;
+  border: 1.5px solid var(--border-soft);
+  background: var(--surface-3);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 180ms ease, background 180ms ease,
+    transform 160ms ease, box-shadow 160ms ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.armCard:hover {
+  border-color: rgba(29, 161, 242, 0.35);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+
+.armCardSelected {
+  border-color: var(--brand);
+  background: var(--brand-subtle);
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.14), var(--shadow-pop);
+}
+
+.armCardRecommended {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.07);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.14), var(--shadow-pop);
+}
+
+.armCardRecommended.armCardSelected {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.12);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.22), var(--shadow-pop);
+}
+
+.ucbBadge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.armName {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.armStats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ucbHighlight {
+  color: #8b5cf6;
+}
+
+.loadingText {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 8px 0 0;
+}
+
+/* ─── Fetch button ────────────────────────────────────────────────*/
+.fetchButton {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-family: inherit;
+  background: linear-gradient(135deg, #8b5cf6 0%, #1DA1F2 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.32);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 150ms ease;
+  letter-spacing: 0.01em;
+  margin-bottom: 1.75rem;
+}
+
+.fetchButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(139, 92, 246, 0.46);
+}
+
+.fetchButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Recommendation cards ────────────────────────────────────────*/
+.recsSection {
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.recCard {
+  width: 100%;
+  text-align: left;
+  border: 1.5px solid var(--border-soft);
+  background: var(--surface-3);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 180ms ease, background 180ms ease,
+    transform 160ms ease, box-shadow 160ms ease;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.recCard:hover:not(:disabled) {
+  border-color: rgba(29, 161, 242, 0.35);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+
+.recCard:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.recCardSelected {
+  border-color: var(--brand);
+  background: var(--brand-subtle);
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.16), var(--shadow-pop);
+}
+
+.recCardSelected::after {
+  content: "Selected";
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--brand);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.recHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.recHeader strong {
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.4;
+}
+
+.scoreBadge {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: rgba(29, 161, 242, 0.1);
+  border: 1px solid rgba(29, 161, 242, 0.22);
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.recReason {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.recMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 8px;
+  font-size: 0.77rem;
+  color: var(--text-muted);
+}
+
+.recMeta span + span::before {
+  content: "· ";
+  opacity: 0.4;
+}
+
+.cardActionHint {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+/* ─── Run editor ──────────────────────────────────────────────────*/
+.editorSection {
+  border: 1.5px solid rgba(29, 161, 242, 0.3);
+  border-radius: 20px;
+  padding: 1.75rem;
+  background: rgba(29, 161, 242, 0.05);
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.keywordsDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+}
+
+.keywordsValue {
+  margin: 0;
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ─── Form layout ─────────────────────────────────────────────────*/
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1.5rem 0 1.5rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  transition: border-color 200ms ease;
+}
+
+.section:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 1.5rem 0 1.5rem 1.25rem;
+  border-left: 2px solid var(--border-soft);
+  transition: border-color 200ms ease;
+}
+
+.grid:focus-within {
+  border-left-color: var(--brand-border);
+}
+
+.datesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ─── Labels ──────────────────────────────────────────────────────*/
+.label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────*/
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 0.925rem;
+  font-family: inherit;
+  transition: border-color 180ms ease, box-shadow 180ms ease,
+    background 180ms ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
+  background: var(--input-focus-bg);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Range preset buttons ────────────────────────────────────────*/
+.rangeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rangeButton {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  transition: all 150ms ease;
+}
+
+.rangeButton:hover:not(:disabled) {
+  border-color: var(--brand-border);
+  color: var(--brand);
+  background: var(--brand-subtle);
+}
+
+.rangeButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.activeRangeButton {
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--brand);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: var(--brand-subtle);
+  color: var(--brand);
+  font-family: inherit;
+  transition: all 150ms ease;
+}
+
+.activeRangeButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Submit button ───────────────────────────────────────────────*/
+.submitButton {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.975rem;
+  font-weight: 800;
+  font-family: inherit;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(29, 161, 242, 0.38);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 150ms ease;
+  letter-spacing: 0.01em;
+  margin-top: 1rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(29, 161, 242, 0.52);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Hint ────────────────────────────────────────────────────────*/
+.hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ─── Message ─────────────────────────────────────────────────────*/
+.message {
+  margin-top: 1.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--danger);
+  padding: 0.75rem 1.1rem;
+  background: rgba(231, 76, 60, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(231, 76, 60, 0.22);
+  line-height: 1.4;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────*/
+@media (max-width: 720px) {
+  .page {
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .armGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid,
+  .datesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .recHeader {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .recCardSelected::after {
+    position: static;
+    display: inline-block;
+    margin-top: 10px;
+  }
+
+  .editorSection {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem 1.1rem;
+    border-radius: 18px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .rangeButton,
+  .activeRangeButton {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}

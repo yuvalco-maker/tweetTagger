@@ -11,6 +11,7 @@ from backend.app.services.tweet_fetch_service import (
     get_queries_by_username,
     get_global_processed_stats,
     get_all_processed_tweets,
+    get_dangerous_locations,
     get_tweet,
     update_tweet,
     get_similar_queries,
@@ -111,6 +112,17 @@ async def get_global_stats(
             status_code=500,
             detail=f"Internal server error: {str(e)}",
         )
+
+
+@tweet_fetch_router.get("/dangerous-locations")
+async def on_get_dangerous_locations(
+    limit: int = Query(default=1000, ge=1, le=5000),
+    current_user: dict = Depends(get_current_user),
+):
+    try:
+        return await get_dangerous_locations(limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 @tweet_fetch_router.get("/all-processed")

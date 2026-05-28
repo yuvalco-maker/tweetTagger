@@ -2,16 +2,33 @@ import React from "react";
 import styles from "./TaggedTweetCard.module.css";
 
 function dangerLabel(value) {
-  if (value === true) return "dangerous";
-  if (value === false) return "not dangerous";
-  return "unknown";
+  if (value === true) return "Dangerous";
+  if (value === false) return "Not dangerous";
+  return "—";
 }
 
 export default function TaggedTweetCard({ tweet, onClick }) {
   if (!tweet) return null;
 
   const isEdited = tweet.edited === true;
-  const status = tweet.status || "pending";
+
+  const STATUS_LABELS = {
+    ml_tagged:    "ML tagged",
+    human_tagged: "Reviewed",
+  };
+  const status =
+    STATUS_LABELS[tweet.status] ??
+    (tweet.is_dangerous != null ? "ML tagged" : "Unprocessed");
+
+  // Use original ML values as the base; fall back to current values if originals
+  // were never stored (older documents).
+  const mlDanger   = tweet.original_is_dangerous ?? tweet.is_dangerous;
+  const mlCategory = tweet.original_category     ?? tweet.category;
+
+  // The human edit changed at least one field
+  const editChanged =
+    isEdited &&
+    (tweet.is_dangerous !== mlDanger || tweet.category !== mlCategory);
 
   return (
     <article
@@ -19,6 +36,7 @@ export default function TaggedTweetCard({ tweet, onClick }) {
       onClick={onClick}
       style={onClick ? { cursor: "pointer" } : undefined}
     >
+      {/* ── Top row: author / date / badges ── */}
       <div className={styles.topRow}>
         <div className={styles.metaLeft}>
           <div className={styles.author}>
@@ -37,51 +55,65 @@ export default function TaggedTweetCard({ tweet, onClick }) {
         </div>
       </div>
 
+      {/* ── Tweet content ── */}
       <div className={styles.text} dir="auto">
         {tweet.content || "No content"}
       </div>
 
       <div className={styles.divider} />
 
-      <div className={styles.tagsRow}>
-        <div className={styles.tagItem}>
-          <span className={styles.label}>category</span>
-          <span className={styles.value}>{tweet.category || "—"}</span>
-        </div>
-
-        <div className={styles.tagItem}>
-          <span className={styles.label}>danger</span>
-          <span className={styles.value}>{dangerLabel(tweet.is_dangerous)}</span>
-        </div>
-
-        {tweet.locked_at && (
-          <div className={styles.tagItem}>
-            <span className={styles.label}>locked at</span>
-            <span className={styles.value}>
-              {new Date(tweet.locked_at).toLocaleString()}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {isEdited && (
-        <>
-          <div className={styles.originalLabel}>ML original</div>
-          <div className={styles.originalRow}>
-            <div className={styles.originalItem}>
+      {/* ── Tagging comparison ── */}
+      {editChanged ? (
+        /* Side-by-side: ML model vs. human edit */
+        <div className={styles.compareGrid}>
+          <div className={styles.compareCol}>
+            <span className={styles.colLabel}>ML model</span>
+            <div className={styles.tagItem}>
               <span className={styles.label}>category</span>
-              <span className={styles.originalValue}>
-                {tweet.original_category || "—"}
+              <span className={styles.value}>{mlCategory || "—"}</span>
+            </div>
+            <div className={styles.tagItem}>
+              <span className={styles.label}>danger</span>
+              <span className={styles.value}>{dangerLabel(mlDanger)}</span>
+            </div>
+          </div>
+
+          <div className={`${styles.compareCol} ${styles.editCol}`}>
+            <span className={styles.colLabel}>Human edit</span>
+            <div className={`${styles.tagItem} ${styles.tagItemEdit}`}>
+              <span className={styles.label}>category</span>
+              <span className={`${styles.value} ${styles.editValue}`}>
+                {tweet.category || "—"}
               </span>
             </div>
-            <div className={styles.originalItem}>
+            <div className={`${styles.tagItem} ${styles.tagItemEdit}`}>
               <span className={styles.label}>danger</span>
-              <span className={styles.originalValue}>
-                {dangerLabel(tweet.original_is_dangerous)}
+              <span className={`${styles.value} ${styles.editValue}`}>
+                {dangerLabel(tweet.is_dangerous)}
               </span>
             </div>
           </div>
-        </>
+        </div>
+      ) : (
+        /* Single column: ML tagging (unedited or no change) */
+        <div className={styles.tagsRow}>
+          <div className={styles.tagItem}>
+            <span className={styles.label}>category</span>
+            <span className={styles.value}>{mlCategory || "—"}</span>
+          </div>
+          <div className={styles.tagItem}>
+            <span className={styles.label}>danger</span>
+            <span className={styles.value}>{dangerLabel(mlDanger)}</span>
+          </div>
+          {tweet.locked_at && (
+            <div className={styles.tagItem}>
+              <span className={styles.label}>locked at</span>
+              <span className={styles.value}>
+                {new Date(tweet.locked_at).toLocaleString()}
+              </span>
+            </div>
+          )}
+        </div>
       )}
     </article>
   );

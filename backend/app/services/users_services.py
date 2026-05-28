@@ -8,7 +8,12 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from passlib.context import CryptContext
 
-from backend.app.db.database import users_collection, password_reset_tokens_collection
+from backend.app.db.database import (
+    users_collection,
+    password_reset_tokens_collection,
+    processed_collection,
+    tweet_search_queries_collection,
+)
 from backend.app.schemas.user_schema import (
     UserResponse,
     createDefaultUser,
@@ -319,6 +324,46 @@ async def reset_password(token: str, new_password: str):
     )
 
     return {"message": "Password has been reset successfully"}
+
+
+async def get_user_activity(username: str):
+    user = await users_collection.find_one({"username": username})
+    if not user:
+        raise ValueError("User not found")
+
+    user_id = str(user["_id"])
+
+    # Queries
+    queries = []
+    async for doc in tweet_search_queries_collection.find(
+        {"requested_by": user_id}
+    ).sort("requested_at", -1).limit(100):
+        doc["_id"] = str(doc["_id"])
+        doc.pop("embedding_vector", None)
+        queries.append(doc)
+
+    # Edited tweets
+    edited_tweets = []
+    async for doc in processed_collection.find(
+        {"tagged_by": user_id, "edited": True}
+    ).sort("fetched_at", -1).limit(200):
+        doc["_id"] = str(doc["_id"])
+        edited_tweets.append(doc)
+
+    return {
+        "user": {
+            "user_id": user_id,
+            "username": user.get("username"),
+            "email": user.get("email"),
+            "isADMIN": bool(user.get("isADMIN", False)),
+        },
+        "stats": {
+            "total_queries": len(queries),
+            "total_edits": len(edited_tweets),
+        },
+        "queries": queries,
+        "edited_tweets": edited_tweets,
+    }
 
 
 async def get_all_users():

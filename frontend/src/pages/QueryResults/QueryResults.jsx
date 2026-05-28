@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TaggedTweetCard from "../../components/TaggedTweetCard/TaggedTweetCard.jsx";
+import TweetMap from "../../components/TweetMap/TweetMap.jsx";
 import styles from "./QueryResults.module.css";
 
 const SERVER_URL =
@@ -80,6 +81,22 @@ export default function QueryResults() {
       </div>
 
       {message && <p className={styles.message}>{message}</p>}
+
+      {/* Threat Location Map */}
+      {(() => {
+        const allLocations = tweets.flatMap((t) =>
+          Array.isArray(t.coordinates)
+            ? t.coordinates.map((c) => ({
+                ...c,
+                category: t.category || null,
+                is_dangerous: t.is_dangerous ?? null,
+              }))
+            : []
+        );
+        return allLocations.length > 0 ? (
+          <TweetMap coordinates={allLocations} queryId={queryId} />
+        ) : null;
+      })()}
 
       {/* Review Queue */}
       <div className={styles.queueSection}>

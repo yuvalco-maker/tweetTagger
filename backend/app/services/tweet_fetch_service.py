@@ -459,6 +459,33 @@ def _clean(doc: dict) -> dict:
     return doc
 
 
+async def get_dangerous_locations(limit: int = 1000):
+    cursor = (
+        processed_collection.find(
+            {
+                "is_dangerous": True,
+                "coordinates": {"$exists": True, "$not": {"$size": 0}, "$ne": None},
+            },
+            {
+                "_id": 1,
+                "tweet_id": 1,
+                "content": 1,
+                "category": 1,
+                "is_dangerous": 1,
+                "query_id": 1,
+                "coordinates": 1,
+            },
+        )
+        .sort("fetched_at", -1)
+        .limit(limit)
+    )
+    results = []
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        results.append(doc)
+    return results
+
+
 async def get_all_processed_tweets(skip: int = 0, limit: int = 50):
     total = await processed_collection.count_documents({})
     cursor = processed_collection.find({}).sort("fetched_at", -1).skip(skip).limit(limit)
@@ -535,6 +562,14 @@ async def update_tweet(tweet, user_id: str | None = None):
             {"_id": "singleton"},
             {"$inc": {"edit_count": -1}},
             upsert=True,
+        )
+
+    query_id = data.get("query_id")
+    if query_id and ObjectId.is_valid(query_id):
+        new_stats = await build_query_stats(query_id)
+        await tweet_search_queries_collection.update_one(
+            {"_id": ObjectId(query_id)},
+            {"$set": new_stats},
         )
 
     data["category"] = cat

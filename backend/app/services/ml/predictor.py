@@ -21,6 +21,14 @@ _class_model     = None
 _class_encoder   = None
 
 
+def _patch_lr(model):
+    # Models trained with sklearn 1.8+ don't store multi_class; sklearn 1.7.x
+    # predict_proba accesses self.multi_class directly, so we backfill it.
+    if not hasattr(model, "multi_class"):
+        model.multi_class = "deprecated"
+    return model
+
+
 def _load_models():
     global _tokenizer, _embed_model, _tfidf_danger
     global _danger_model, _relevance_model, _class_model, _class_encoder
@@ -35,9 +43,9 @@ def _load_models():
     _embed_model.eval()
 
     _tfidf_danger    = joblib.load(MODELS_DIR / "tfidf_danger.pkl")
-    _danger_model    = joblib.load(MODELS_DIR / "danger_model.pkl")
-    _relevance_model = joblib.load(MODELS_DIR / "relevance_model.pkl")
-    _class_model     = joblib.load(MODELS_DIR / "class_model.pkl")
+    _danger_model    = _patch_lr(joblib.load(MODELS_DIR / "danger_model.pkl"))
+    _relevance_model = _patch_lr(joblib.load(MODELS_DIR / "relevance_model.pkl"))
+    _class_model     = _patch_lr(joblib.load(MODELS_DIR / "class_model.pkl"))
     _class_encoder   = joblib.load(MODELS_DIR / "class_encoder.pkl")
 
 

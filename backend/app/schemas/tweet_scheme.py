@@ -6,6 +6,12 @@ from datetime import datetime, timezone
 def _now_utc() -> datetime:
     return datetime.now(timezone.utc)
 
+class TweetLocation(BaseModel):
+    place_name: str
+    lat: float
+    lng: float
+    confidence: str  # "high", "medium", "low"
+
 
 class TweetSchema(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
@@ -29,7 +35,7 @@ class TweetSchema(BaseModel):
 
     fetched_by: Optional[str] = None
     fetched_at: Optional[datetime] = None
-
+    coordinates: Optional[List[TweetLocation]] = None
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,

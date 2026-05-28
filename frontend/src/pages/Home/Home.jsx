@@ -5,7 +5,6 @@ import styles from "./Home.module.css";
 const SERVER_URL =
   import.meta.env.VITE_SERVER_URL || "https://em5epzymak.eu-west-3.awsapprunner.com";
 
-
 function getIsAdmin() {
   try {
     const token = localStorage.getItem("token");
@@ -16,6 +15,46 @@ function getIsAdmin() {
     return false;
   }
 }
+
+const NAV_ITEMS = [
+  {
+    icon: "🔍",
+    label: "Search Query",
+    desc: "Fetch tweets from Apify by keywords & date range",
+    path: "/search-query",
+    primary: true,
+  },
+  {
+    icon: "📋",
+    label: "Query History",
+    desc: "Browse and revisit past searches",
+    path: "/query-history",
+  },
+  {
+    icon: "📊",
+    label: "ML Statistics",
+    desc: "Accuracy breakdown & tagging summary",
+    path: "/stats",
+  },
+  {
+    icon: "🧩",
+    label: "Threat Themes",
+    desc: "Semantic clustering of dangerous tweets",
+    path: "/threat-themes",
+  },
+  {
+    icon: "🌍",
+    label: "Global Threat Map",
+    desc: "Heat-map of dangerous tweet locations",
+    path: "/threat-map",
+  },
+  {
+    icon: "🐦",
+    label: "All Tagged Tweets",
+    desc: "Full list of ML-processed tweets",
+    path: "/all-tweets",
+  },
+];
 
 function Home() {
   const navigate = useNavigate();
@@ -79,38 +118,48 @@ function Home() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Welcome to Tweet-Tagger</h1>
 
-        <p className={styles.description}>
-          Fetch tweets, analyze them, and prepare data for ML tagging.
-        </p>
+        {/* ── Header ── */}
+        <div className={styles.hero}>
+          <h1 className={styles.title}>Tweet-Tagger</h1>
+          <p className={styles.subtitle}>
+            Infrastructure threat intelligence — fetch, classify, and analyse.
+          </p>
+        </div>
 
-        <button className={styles.button} onClick={() => navigate("/search-query")}>
-          Search Query
-        </button>
+        {/* ── Navigation grid ── */}
+        <nav className={styles.grid}>
+          {NAV_ITEMS.map(({ icon, label, desc, path, primary }) => (
+            <button
+              key={path}
+              className={primary ? `${styles.navBtn} ${styles.navBtnPrimary}` : styles.navBtn}
+              onClick={() => navigate(path)}
+            >
+              <span className={styles.navIcon}>{icon}</span>
+              <span className={styles.navText}>
+                <span className={styles.navLabel}>{label}</span>
+                <span className={styles.navDesc}>{desc}</span>
+              </span>
+              <span className={styles.navArrow}>→</span>
+            </button>
+          ))}
 
-        <button className={styles.button} onClick={() => navigate("/query-history")}>
-          Query History
-        </button>
+          {isAdmin && (
+            <button
+              className={`${styles.navBtn} ${styles.navBtnAdmin}`}
+              onClick={() => navigate("/admin")}
+            >
+              <span className={styles.navIcon}>⚙️</span>
+              <span className={styles.navText}>
+                <span className={styles.navLabel}>Admin Panel</span>
+                <span className={styles.navDesc}>Model retraining &amp; system config</span>
+              </span>
+              <span className={styles.navArrow}>→</span>
+            </button>
+          )}
+        </nav>
 
-        <button className={styles.button} onClick={() => navigate("/stats")}>
-          ML Statistics
-        </button>
-
-        <button className={styles.button} onClick={() => navigate("/threat-themes")}>
-          Threat Themes
-        </button>
-
-        <button className={styles.button} onClick={() => navigate("/all-tweets")}>
-          All Tagged Tweets
-        </button>
-
-        {isAdmin && (
-          <button className={styles.button} onClick={() => navigate("/admin")}>
-            Admin Panel
-          </button>
-        )}
-
+        {/* ── Admin retrain box ── */}
         {isAdmin && stats && (
           <div className={styles.retrainBox}>
             <div className={styles.retrainInfo}>
@@ -131,12 +180,15 @@ function Home() {
               onClick={handleRetrain}
               disabled={retraining || stats.in_progress || (stats.edit_count ?? 0) < (stats.retrain_threshold ?? 300)}
             >
-              {stats.in_progress ? "Training in progress…" : `Retrain model (${stats.retrain_threshold ?? 300} edits required)`}
+              {stats.in_progress
+                ? "Training in progress…"
+                : `Retrain model (${stats.retrain_threshold ?? 300} edits required)`}
             </button>
             {retrainMsg && <p className={styles.retrainMsg}>{retrainMsg}</p>}
             {stats.last_error && <p className={styles.retrainError}>Last error: {stats.last_error}</p>}
           </div>
         )}
+
       </div>
     </div>
   );
