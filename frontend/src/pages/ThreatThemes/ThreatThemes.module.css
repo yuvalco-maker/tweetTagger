@@ -300,4 +300,33 @@
   .card {
     padding: 22px;
   }
+
+  .modeToggle {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .modeBtn,
+  .modeActive {
+    font-size: 0.82rem;
+    padding: 7px 14px;
+  }
+
+  .sectionTitle {
+    font-size: 1rem;
+  }
 }
