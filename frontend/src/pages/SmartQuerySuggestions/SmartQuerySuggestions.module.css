@@ -461,3 +461,29 @@
     margin-top: 10px;
   }
 }
+
+@media (max-width: 480px) {
+  .page {
+    padding: 14px 10px;
+  }
+
+  .card {
+    padding: 1.25rem 1rem;
+    border-radius: 18px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .section,
+  .grid {
+    padding: 1.25rem 0 1.25rem 0.75rem;
+  }
+
+  .submitButton,
+  .runButton {
+    padding: 0.875rem;
+    font-size: 0.925rem;
+  }
+}

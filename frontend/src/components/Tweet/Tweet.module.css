@@ -46,3 +46,10 @@
   word-wrap: break-word;
   margin: 0;
 }
+
+@media (max-width: 480px) {
+  .card {
+    padding: 16px 18px;
+    border-radius: 14px;
+  }
+}
