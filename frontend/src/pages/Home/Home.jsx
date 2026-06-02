@@ -54,6 +54,12 @@ const NAV_ITEMS = [
     desc: "Full list of ML-processed tweets",
     path: "/all-tweets",
   },
+  {
+    icon: "🔬",
+    label: "Entity Explorer",
+    desc: "Knowledge graph & threat queries for any entity",
+    path: "/entity-explorer",
+  },
 ];
 
 function Home() {

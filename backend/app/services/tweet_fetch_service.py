@@ -82,7 +82,7 @@ def run_apify_actor(run_input: dict):
     client = ApifyClient(APIFY_API_TOKEN)
 
     run = client.actor(ACTOR_ID).call(run_input=run_input)
-    dataset_id = run.default_dataset_id
+    dataset_id = run["defaultDatasetId"]
 
     return client.dataset(dataset_id).list_items().items
 
