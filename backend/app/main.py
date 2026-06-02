@@ -13,6 +13,7 @@ from backend.app.controller.threat_theme_controller import threat_theme_router
 from backend.app.controller.admin_controller import admin_router
 from backend.app.controller.review_queue_controller import review_queue_router
 from backend.app.controller.mab_controller import mab_router
+from backend.app.controller.entity_controller import entity_router
 load_dotenv()
 
 
@@ -54,6 +55,7 @@ app.include_router(threat_theme_router)
 app.include_router(admin_router)
 app.include_router(review_queue_router)
 app.include_router(mab_router)
+app.include_router(entity_router)
 @app.get("/health")
 async def health():
     return {"status": "alive", "database": "connected"}

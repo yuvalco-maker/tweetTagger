@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./SearchQuery.module.css";
 
 const SERVER_URL =
@@ -18,14 +18,22 @@ function getDateDaysAgo(days) {
 
 export default function SearchQuery() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [keywords, setKeywords] = useState([""]);
+  // Pre-fill from URL params (e.g. launched from Entity Explorer)
+  const paramKeywords = searchParams.get("keywords");
+  const paramStart    = searchParams.get("start_date");
+  const paramEnd      = searchParams.get("end_date");
+
+  const [keywords, setKeywords] = useState(
+    paramKeywords ? paramKeywords.split(" ").filter(Boolean) : [""]
+  );
   const [language, setLanguage] = useState("en");
   const [maxItems, setMaxItems] = useState(10);
 
-  const [rangeMode, setRangeMode] = useState("week");
-  const [startDate, setStartDate] = useState(getDateDaysAgo(7));
-  const [endDate, setEndDate] = useState(getTodayDate());
+  const [rangeMode, setRangeMode] = useState(paramStart ? "custom" : "week");
+  const [startDate, setStartDate] = useState(paramStart || getDateDaysAgo(7));
+  const [endDate, setEndDate]     = useState(paramEnd   || getTodayDate());
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
