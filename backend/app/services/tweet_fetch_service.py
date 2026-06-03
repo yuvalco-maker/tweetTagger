@@ -82,7 +82,7 @@ def run_apify_actor(run_input: dict):
     client = ApifyClient(APIFY_API_TOKEN)
 
     run = client.actor(ACTOR_ID).call(run_input=run_input)
-    dataset_id = run["defaultDatasetId"]
+    dataset_id = run.default_dataset_id
 
     return client.dataset(dataset_id).list_items().items
 
@@ -114,9 +114,7 @@ async def build_query_stats(query_id: str):
 
         if is_dangerous is True:
             dangerous_count += 1
-            categories_dangerous[category] = (
-                categories_dangerous.get(category, 0) + 1
-            )
+            categories_dangerous[category] = categories_dangerous.get(category, 0) + 1
         else:
             not_dangerous_count += 1
             categories_not_dangerous[category] = (
@@ -186,11 +184,9 @@ async def fetch_tweets_from_apify(
         "inserted_count": 0,
         "ml_processed_count": 0,
         "status": "running",
-
         "embedding_text": embedding_text,
         "embedding_vector": embedding_vector,
         "embedding_model": embedding_model,
-
         "dangerous_count": 0,
         "not_dangerous_count": 0,
         "dangerous_percentage": 0,
@@ -453,6 +449,7 @@ async def get_global_processed_stats():
 
 _HIDDEN_FIELDS = {"tagged_by"}
 
+
 def _clean(doc: dict) -> dict:
     for f in _HIDDEN_FIELDS:
         doc.pop(f, None)
@@ -488,7 +485,9 @@ async def get_dangerous_locations(limit: int = 1000):
 
 async def get_all_processed_tweets(skip: int = 0, limit: int = 50):
     total = await processed_collection.count_documents({})
-    cursor = processed_collection.find({}).sort("fetched_at", -1).skip(skip).limit(limit)
+    cursor = (
+        processed_collection.find({}).sort("fetched_at", -1).skip(skip).limit(limit)
+    )
     tweets = []
     async for doc in cursor:
         doc["_id"] = str(doc["_id"])
@@ -578,6 +577,8 @@ async def update_tweet(tweet, user_id: str | None = None):
     data["_id"] = str(data["_id"])
 
     return _clean(data)
+
+
 def cosine_similarity(vec1: list[float], vec2: list[float]) -> float:
     if not vec1 or not vec2:
         return 0
@@ -632,9 +633,7 @@ async def get_similar_queries(query_id: str, limit: int = 5):
 
         similarity = cosine_similarity(source_embedding, other_embedding)
 
-        dangerous_score = normalize_percentage(
-            other.get("dangerous_percentage")
-        )
+        dangerous_score = normalize_percentage(other.get("dangerous_percentage"))
 
         final_score = round(
             0.7 * similarity + 0.3 * dangerous_score,
@@ -677,6 +676,8 @@ async def get_similar_queries(query_id: str, limit: int = 5):
         },
         "recommendations": results[:limit],
     }
+
+
 async def get_smart_query_suggestions(
     request: FetchTweetsRequest,
     limit: int = 5,
