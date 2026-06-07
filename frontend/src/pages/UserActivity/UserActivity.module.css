@@ -34,7 +34,6 @@
   cursor: pointer;
   transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
-
 .backButton:hover {
   background: var(--surface-2);
   border-color: rgba(29, 161, 242, 0.30);
@@ -56,22 +55,29 @@
   font-size: 0.875rem;
 }
 
-/* ─── Search ──────────────────────────────────────────────────── */
-.searchRow {
-  display: flex;
-  gap: 10px;
-  margin-top: 2rem;
-  align-items: flex-start;
+.message {
+  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
 }
 
-.inputWrap {
-  flex: 1;
-  position: relative;
+.loadingMsg {
+  margin-top: 2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Filter row ──────────────────────────────────────────────── */
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2rem;
 }
 
 .input {
-  width: 100%;
-  box-sizing: border-box;
+  flex: 1;
   padding: 0.75rem 1rem;
   border-radius: 12px;
   border: 1px solid var(--input-border);
@@ -86,62 +92,99 @@
   border-color: var(--input-focus-border);
   box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
-.input:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 100;
-  list-style: none;
-  margin: 0;
-  padding: 4px 0;
-  background: var(--card-surface);
-  border: 1px solid var(--card-border-color);
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-  max-height: 240px;
-  overflow-y: auto;
+.clearBtn {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 150ms ease, color 150ms ease;
+}
+.clearBtn:hover { background: var(--surface-3); color: var(--text-color); }
+
+/* ─── User grid ───────────────────────────────────────────────── */
+.userGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 1.5rem;
 }
 
-.dropdownItem {
-  padding: 0.6rem 1rem;
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  background: var(--surface-3);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-color);
+  text-align: left;
+  transition: background 150ms ease, border-color 150ms ease,
+              transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: var(--shadow-soft);
+}
+.userCard:hover {
+  background: var(--surface-2);
+  border-color: rgba(29, 161, 242, 0.30);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+.userCard:active { transform: translateY(0); }
+
+.userCardAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userCardInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.userCardName {
+  font-weight: 700;
   font-size: 0.9rem;
   color: var(--text-color);
-  cursor: pointer;
-  transition: background 120ms ease;
-}
-.dropdownItem:hover {
-  background: var(--surface-2);
-  color: #1DA1F2;
-}
-
-.searchBtn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 800;
-  font-size: 0.925rem;
-  font-family: inherit;
-  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(29,161,242,0.36);
-  transition: transform 180ms ease, box-shadow 180ms ease;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.searchBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(29,161,242,0.50); }
-.searchBtn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 
-.message {
-  margin-top: 1rem;
-  font-weight: 600;
-  font-size: 0.875rem;
+.userCardEmail {
+  font-size: 0.76rem;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ─── User banner ─────────────────────────────────────────────── */
+.userCardArrow {
+  color: #1DA1F2;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ─── User banner (detail view) ───────────────────────────────── */
 .userBanner {
   display: flex;
   align-items: center;
@@ -187,6 +230,7 @@
   color: #2563eb;
   font-size: 0.75rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 /* ─── Stats row ───────────────────────────────────────────────── */
@@ -227,7 +271,6 @@
   gap: 8px;
   margin-top: 1.75rem;
   border-bottom: 1px solid var(--border-soft);
-  padding-bottom: 0;
 }
 
 .tab {
@@ -317,10 +360,7 @@
   color: var(--text-muted);
 }
 
-.dangerous {
-  color: #ef4444;
-  font-weight: 700;
-}
+.dangerous { color: #ef4444; font-weight: 700; }
 
 .clickHint {
   margin: 10px 0 0;
@@ -361,40 +401,13 @@
   font-size: 0.78rem;
 }
 
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.metaLabel {
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.original {
-  color: var(--text-muted);
-  text-decoration: line-through;
-}
-
-.arrow {
-  color: var(--text-muted);
-}
-
-.current {
-  color: var(--text-color);
-  font-weight: 700;
-}
-
-.dangerYes {
-  color: #ef4444;
-  font-weight: 700;
-}
-
-.dangerNo {
-  color: #22c55e;
-  font-weight: 700;
-}
+.metaItem { display: flex; align-items: center; gap: 5px; }
+.metaLabel { color: var(--text-muted); font-weight: 600; }
+.original { color: var(--text-muted); text-decoration: line-through; }
+.arrow { color: var(--text-muted); }
+.current { color: var(--text-color); font-weight: 700; }
+.dangerYes { color: #ef4444; font-weight: 700; }
+.dangerNo  { color: #22c55e; font-weight: 700; }
 
 .detailLink {
   align-self: flex-start;
@@ -413,6 +426,7 @@
 
 /* ─── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 800px) {
+  .userGrid { grid-template-columns: 1fr; }
   .list { grid-template-columns: 1fr; }
   .statsRow { flex-direction: row; }
 }
@@ -420,7 +434,6 @@
 @media (max-width: 650px) {
   .page { padding: 20px 16px; }
   .card { padding: 1.75rem 1.5rem; border-radius: 20px; }
-  .searchRow { flex-direction: column; }
 }
 
 @media (max-width: 480px) {
