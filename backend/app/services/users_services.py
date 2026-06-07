@@ -335,11 +335,13 @@ async def get_user_activity(username: str):
 
     # Queries
     queries = []
+    total_fetched = 0
     async for doc in tweet_search_queries_collection.find(
         {"requested_by": user_id}
     ).sort("requested_at", -1).limit(100):
         doc["_id"] = str(doc["_id"])
         doc.pop("embedding_vector", None)
+        total_fetched += doc.get("inserted_count", 0)
         queries.append(doc)
 
     # Edited tweets
@@ -359,11 +361,72 @@ async def get_user_activity(username: str):
         },
         "stats": {
             "total_queries": len(queries),
+            "total_fetched": total_fetched,
             "total_edits": len(edited_tweets),
         },
         "queries": queries,
         "edited_tweets": edited_tweets,
     }
+
+
+async def get_my_activity(user_id: str):
+    try:
+        oid = ObjectId(user_id)
+    except Exception:
+        raise ValueError("Invalid user id")
+
+    user = await users_collection.find_one({"_id": oid})
+    if not user:
+        raise ValueError("User not found")
+
+    queries = []
+    total_fetched = 0
+    async for doc in tweet_search_queries_collection.find(
+        {"requested_by": user_id}
+    ).sort("requested_at", -1).limit(100):
+        doc["_id"] = str(doc["_id"])
+        doc.pop("embedding_vector", None)
+        total_fetched += doc.get("inserted_count", 0)
+        queries.append(doc)
+
+    edited_tweets = []
+    async for doc in processed_collection.find(
+        {"tagged_by": user_id, "edited": True}
+    ).sort("fetched_at", -1).limit(200):
+        doc["_id"] = str(doc["_id"])
+        edited_tweets.append(doc)
+
+    return {
+        "user": {
+            "user_id": user_id,
+            "username": user.get("username"),
+            "email": user.get("email"),
+            "isADMIN": bool(user.get("isADMIN", False)),
+        },
+        "stats": {
+            "total_queries": len(queries),
+            "total_fetched": total_fetched,
+            "total_edits": len(edited_tweets),
+        },
+        "queries": queries,
+        "edited_tweets": edited_tweets,
+    }
+
+
+async def search_users_by_query(q: str, limit: int = 8):
+    q = q.strip()
+    if not q:
+        return []
+    cursor = users_collection.find(
+        {"username": {"$regex": q, "$options": "i"}},
+        {"username": 1}
+    ).limit(limit)
+    results = []
+    async for doc in cursor:
+        name = doc.get("username")
+        if name:
+            results.append(name)
+    return results
 
 
 async def get_all_users():

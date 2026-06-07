@@ -13,6 +13,8 @@ from backend.app.services.users_services import (
     get_all_users,
     promote_user,
     get_user_activity,
+    get_my_activity,
+    search_users_by_query,
 )
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -93,6 +95,21 @@ async def promote(user_id: str, current_user: dict = Depends(get_current_user)):
         raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@users_router.get("/me/activity")
+async def my_activity(current_user: dict = Depends(get_current_user)):
+    try:
+        return await get_my_activity(str(current_user["_id"]))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@users_router.get("/search")
+async def search_users(q: str = "", current_user: dict = Depends(get_current_user)):
+    if not current_user.get("isADMIN"):
+        raise HTTPException(status_code=403, detail="Admin only")
+    return await search_users_by_query(q)
 
 
 @users_router.get("/{username}/activity")

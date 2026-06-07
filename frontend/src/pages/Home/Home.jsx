@@ -60,6 +60,12 @@ const NAV_ITEMS = [
     desc: "Knowledge graph & threat queries for any entity",
     path: "/entity-explorer",
   },
+  {
+    icon: "📌",
+    label: "My Activity",
+    desc: "Your tagged tweets and query history",
+    path: "/my-activity",
+  },
 ];
 
 function Home() {

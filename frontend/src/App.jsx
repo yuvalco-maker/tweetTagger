@@ -21,6 +21,7 @@ import LocationTweets from "./pages/LocationTweets/LocationTweets.jsx";
 import GlobalThreatMap from "./pages/GlobalThreatMap/GlobalThreatMap.jsx";
 import UserActivity from "./pages/UserActivity/UserActivity.jsx";
 import EntityExplorer from "./pages/EntityExplorer/EntityExplorer.jsx";
+import MyActivity from "./pages/MyActivity/MyActivity.jsx";
 function AppLayout() {
   return (
     <>
@@ -62,6 +63,7 @@ function App() {
           <Route path="/threat-map" element={<GlobalThreatMap />} />
           <Route path="/user-activity" element={<UserActivity />} />
           <Route path="/entity-explorer" element={<EntityExplorer />} />
+          <Route path="/my-activity" element={<MyActivity />} />
         </Route>
       </Routes>
     </Router>

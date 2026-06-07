@@ -34,7 +34,6 @@
   cursor: pointer;
   transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
-
 .backButton:hover {
   background: var(--surface-2);
   border-color: rgba(29, 161, 242, 0.30);
@@ -55,84 +54,6 @@
   line-height: 1.65;
   font-size: 0.875rem;
 }
-
-/* ─── Search ──────────────────────────────────────────────────── */
-.searchRow {
-  display: flex;
-  gap: 10px;
-  margin-top: 2rem;
-  align-items: flex-start;
-}
-
-.inputWrap {
-  flex: 1;
-  position: relative;
-}
-
-.input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-color);
-  font-size: 0.925rem;
-  font-family: inherit;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-  outline: none;
-}
-.input:focus {
-  border-color: var(--input-focus-border);
-  box-shadow: 0 0 0 3px var(--input-focus-ring);
-}
-.input:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: 100;
-  list-style: none;
-  margin: 0;
-  padding: 4px 0;
-  background: var(--card-surface);
-  border: 1px solid var(--card-border-color);
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-.dropdownItem {
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: background 120ms ease;
-}
-.dropdownItem:hover {
-  background: var(--surface-2);
-  color: #1DA1F2;
-}
-
-.searchBtn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 800;
-  font-size: 0.925rem;
-  font-family: inherit;
-  background: linear-gradient(135deg, #1DA1F2 0%, #0a8ed4 100%);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(29,161,242,0.36);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-  white-space: nowrap;
-}
-.searchBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(29,161,242,0.50); }
-.searchBtn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .message {
   margin-top: 1rem;
@@ -265,6 +186,78 @@
   font-weight: 600;
 }
 
+/* ─── Tweet card ──────────────────────────────────────────────── */
+.tweetCard {
+  padding: 1.2rem 1.4rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: var(--surface-3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.tweetContent {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tweetMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 0.78rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.metaLabel {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.original {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.arrow { color: var(--text-muted); }
+
+.current {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.dangerYes { color: #ef4444; font-weight: 700; }
+.dangerNo  { color: #22c55e; font-weight: 700; }
+
+.detailLink {
+  align-self: flex-start;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1DA1F2;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 150ms ease;
+}
+.detailLink:hover { opacity: 1; }
+
 /* ─── Query card ──────────────────────────────────────────────── */
 .queryCard {
   width: 100%;
@@ -317,10 +310,7 @@
   color: var(--text-muted);
 }
 
-.dangerous {
-  color: #ef4444;
-  font-weight: 700;
-}
+.dangerous { color: #ef4444; font-weight: 700; }
 
 .clickHint {
   margin: 10px 0 0;
@@ -329,87 +319,6 @@
   color: #1DA1F2;
   opacity: 0.8;
 }
-
-/* ─── Tweet card ──────────────────────────────────────────────── */
-.tweetCard {
-  padding: 1.2rem 1.4rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 16px;
-  background: var(--surface-3);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: var(--shadow-soft);
-}
-
-.tweetContent {
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--text-color);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.tweetMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  font-size: 0.78rem;
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.metaLabel {
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.original {
-  color: var(--text-muted);
-  text-decoration: line-through;
-}
-
-.arrow {
-  color: var(--text-muted);
-}
-
-.current {
-  color: var(--text-color);
-  font-weight: 700;
-}
-
-.dangerYes {
-  color: #ef4444;
-  font-weight: 700;
-}
-
-.dangerNo {
-  color: #22c55e;
-  font-weight: 700;
-}
-
-.detailLink {
-  align-self: flex-start;
-  border: none;
-  background: none;
-  padding: 0;
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #1DA1F2;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 150ms ease;
-}
-.detailLink:hover { opacity: 1; }
 
 /* ─── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 800px) {
@@ -420,7 +329,6 @@
 @media (max-width: 650px) {
   .page { padding: 20px 16px; }
   .card { padding: 1.75rem 1.5rem; border-radius: 20px; }
-  .searchRow { flex-direction: column; }
 }
 
 @media (max-width: 480px) {

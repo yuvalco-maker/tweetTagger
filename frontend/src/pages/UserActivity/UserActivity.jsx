@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserActivity.module.css";
 
@@ -27,15 +27,59 @@ function StatCard({ label, value }) {
 export default function UserActivity() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [data, setData] = useState(null);
   const [activeTab, setActiveTab] = useState("queries");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const debounceRef = useRef(null);
+  const wrapperRef = useRef(null);
 
   if (!getIsAdmin()) {
     navigate("/home");
     return null;
   }
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const handleUsernameChange = (e) => {
+    const val = e.target.value;
+    setUsername(val);
+    clearTimeout(debounceRef.current);
+    if (!val.trim()) { setSuggestions([]); setShowSuggestions(false); return; }
+    debounceRef.current = setTimeout(async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(
+          `${SERVER_URL}/users/search?q=${encodeURIComponent(val.trim())}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const json = await res.json().catch(() => []);
+        if (Array.isArray(json) && json.length > 0) {
+          setSuggestions(json);
+          setShowSuggestions(true);
+        } else {
+          setSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } catch { /* ignore */ }
+    }, 280);
+  };
+
+  const selectSuggestion = (name) => {
+    setUsername(name);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
 
   const fetchActivity = async () => {
     const clean = username.trim();
@@ -46,6 +90,7 @@ export default function UserActivity() {
     setMessage("");
     setLoading(true);
     setData(null);
+    setShowSuggestions(false);
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
@@ -68,6 +113,7 @@ export default function UserActivity() {
 
   const handleKey = (e) => {
     if (e.key === "Enter") fetchActivity();
+    if (e.key === "Escape") setShowSuggestions(false);
   };
 
   return (
@@ -82,15 +128,32 @@ export default function UserActivity() {
           Search a username to see their queries and edited tweets.
         </p>
 
-        <div className={styles.searchRow}>
-          <input
-            className={styles.input}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder="Enter username…"
-            disabled={loading}
-          />
+        <div className={styles.searchRow} ref={wrapperRef}>
+          <div className={styles.inputWrap}>
+            <input
+              className={styles.input}
+              value={username}
+              onChange={handleUsernameChange}
+              onKeyDown={handleKey}
+              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+              placeholder="Enter username…"
+              disabled={loading}
+              autoComplete="off"
+            />
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className={styles.dropdown}>
+                {suggestions.map((s) => (
+                  <li
+                    key={s}
+                    className={styles.dropdownItem}
+                    onMouseDown={() => selectSuggestion(s)}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <button
             className={styles.searchBtn}
             onClick={fetchActivity}
@@ -119,7 +182,8 @@ export default function UserActivity() {
 
             <div className={styles.statsRow}>
               <StatCard label="Queries run" value={data.stats.total_queries} />
-              <StatCard label="Tweets edited" value={data.stats.total_edits} />
+              <StatCard label="Tweets fetched" value={data.stats.total_fetched ?? "—"} />
+              <StatCard label="Tweets tagged" value={data.stats.total_edits} />
             </div>
 
             <div className={styles.tabs}>
