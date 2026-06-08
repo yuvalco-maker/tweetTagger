@@ -31,7 +31,7 @@ export default function Header() {
       .then((data) => {
         if (data) setUser(data);
       })
-      .catch(() => {});
+      .catch(() => {/* network error — keep user logged in */});
   }, [navigate]);
 
   const handleLogout = () => {
