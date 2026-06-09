@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.controller.ai_summary_controller import ai_summary_router
 from backend.app.controller.users_controller import auth_router, users_router
 from backend.app.controller.ml_controller import ml_router
-from backend.app.db.database import connect_to_mongo, close_mongo_connection
+from backend.app.db.database import connect_to_mongo, close_mongo_connection, model_stats_collection
 from backend.app.controller.tweet_fetch_controller import tweet_fetch_router
 from backend.app.controller.ai_consult_controller import ai_consult_router
 from backend.app.controller.threat_theme_controller import threat_theme_router
@@ -21,6 +21,10 @@ load_dotenv()
 async def lifespan(app: FastAPI):
     try:
         await connect_to_mongo()
+        await model_stats_collection.update_one(
+            {"_id": "singleton"},
+            {"$set": {"in_progress": False}},
+        )
         print("MongoDB connected successfully.")
         yield
     except Exception as e:

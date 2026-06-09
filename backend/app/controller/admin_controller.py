@@ -15,36 +15,47 @@ MODEL_STATS_ID = "singleton"
 
 
 async def _do_retrain():
+    print("[admin] Retraining started", flush=True)
     await model_stats_collection.update_one(
         {"_id": MODEL_STATS_ID},
         {"$set": {"in_progress": True}},
         upsert=True,
     )
     try:
+        print("[admin] Calling run_retraining…", flush=True)
         metrics = await asyncio.to_thread(run_retraining)
+        print(f"[admin] Retraining finished, metrics: {metrics}", flush=True)
 
         # Reset all edited tweets — corrections are now the model's new baseline
         await processed_collection.update_many(
             {"edited": True},
-            [{"$set": {
-                "edited": False,
-                "original_is_dangerous": "$is_dangerous",
-                "original_category": "$category",
-            }}],
+            [
+                {
+                    "$set": {
+                        "edited": False,
+                        "original_is_dangerous": "$is_dangerous",
+                        "original_category": "$category",
+                    }
+                }
+            ],
         )
 
         await model_stats_collection.update_one(
             {"_id": MODEL_STATS_ID},
-            {"$set": {
-                "edit_count": 0,
-                "last_trained_at": datetime.now(timezone.utc),
-                "in_progress": False,
-                "last_metrics": metrics,
-                "last_error": None,
-            }},
+            {
+                "$set": {
+                    "edit_count": 0,
+                    "last_trained_at": datetime.now(timezone.utc),
+                    "in_progress": False,
+                    "last_metrics": metrics,
+                    "last_error": None,
+                }
+            },
             upsert=True,
         )
+        print("[admin] DB updated, retraining complete", flush=True)
     except Exception as e:
+        print(f"[admin] Retraining FAILED: {e}", flush=True)
         await model_stats_collection.update_one(
             {"_id": MODEL_STATS_ID},
             {"$set": {"in_progress": False, "last_error": str(e)}},
@@ -56,7 +67,13 @@ async def _do_retrain():
 async def get_model_stats(current_user: dict = Depends(get_current_user)):
     doc = await model_stats_collection.find_one({"_id": MODEL_STATS_ID})
     if not doc:
-        return {"edit_count": 0, "last_trained_at": None, "in_progress": False, "last_metrics": None, "retrain_threshold": RETRAIN_THRESHOLD}
+        return {
+            "edit_count": 0,
+            "last_trained_at": None,
+            "in_progress": False,
+            "last_metrics": None,
+            "retrain_threshold": RETRAIN_THRESHOLD,
+        }
     doc.pop("_id", None)
     doc["retrain_threshold"] = RETRAIN_THRESHOLD
     return doc

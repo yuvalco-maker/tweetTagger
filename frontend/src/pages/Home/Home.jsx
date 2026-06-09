@@ -5,6 +5,8 @@ import styles from "./Home.module.css";
 const SERVER_URL =
   import.meta.env.VITE_SERVER_URL || "https://em5epzymak.eu-west-3.awsapprunner.com";
 
+console.log("[config] Backend URL:", SERVER_URL);
+
 function getIsAdmin() {
   try {
     const token = localStorage.getItem("token");
@@ -98,6 +100,7 @@ function Home() {
         .catch(() => null)
         .then((data) => {
           if (!data) return;
+
           setStats(data);
           if (!data.in_progress) {
             setRetraining(false);
@@ -113,15 +116,18 @@ function Home() {
     const token = localStorage.getItem("token");
     setRetraining(true);
     setRetrainMsg("");
+    console.log("[retrain] Sending retrain request…");
     const res = await fetch(`${SERVER_URL}/admin/retrain`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
+      console.error("[retrain] Failed to start:", data?.detail);
       setRetraining(false);
       setRetrainMsg(data?.detail || "Failed to start retraining.");
     } else {
+      console.log("[retrain] Started successfully");
       setStats((s) => ({ ...s, in_progress: true }));
       setRetrainMsg("Retraining started, this will take a few minutes…");
     }
