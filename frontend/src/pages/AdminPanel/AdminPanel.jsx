@@ -114,6 +114,9 @@ export default function AdminPanel() {
           ← Back
         </button>
         <div className={styles.topBarRight}>
+          <button className={styles.activityBtn} onClick={() => navigate("/user-progress")}>
+            User Progress →
+          </button>
           <button className={styles.activityBtn} onClick={() => navigate("/user-activity")}>
             User Activity →
           </button>

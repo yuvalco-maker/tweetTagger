@@ -11,6 +11,7 @@ from backend.app.services.users_services import (
     forgot_password,
     reset_password,
     get_all_users,
+    get_all_users_stats,
     promote_user,
     get_user_activity,
     get_my_activity,
@@ -85,6 +86,13 @@ async def get_users(current_user: dict = Depends(get_current_user)):
     if not current_user.get("isADMIN"):
         raise HTTPException(status_code=403, detail="Admin only")
     return await get_all_users()
+
+
+@users_router.get("/all-stats")
+async def get_users_stats(current_user: dict = Depends(get_current_user)):
+    if not current_user.get("isADMIN"):
+        raise HTTPException(status_code=403, detail="Admin only")
+    return await get_all_users_stats()
 
 
 @users_router.patch("/{user_id}/promote")

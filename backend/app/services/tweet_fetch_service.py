@@ -82,7 +82,11 @@ def run_apify_actor(run_input: dict):
     client = ApifyClient(APIFY_API_TOKEN)
 
     run = client.actor(ACTOR_ID).call(run_input=run_input)
-    dataset_id = run.default_dataset_id
+    dataset_id = (
+        run.get("defaultDatasetId") if isinstance(run, dict) else run.default_dataset_id
+    )
+    if not dataset_id:
+        raise RuntimeError("Apify run did not return a dataset ID")
 
     return client.dataset(dataset_id).list_items().items
 

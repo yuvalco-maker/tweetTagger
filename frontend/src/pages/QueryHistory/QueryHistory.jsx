@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./QueryHistory.module.css";
 
@@ -13,6 +13,19 @@ export default function QueryHistory() {
   const [queries, setQueries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("query_history_state");
+    if (saved) {
+      sessionStorage.removeItem("query_history_state");
+      try {
+        const s = JSON.parse(saved);
+        setQueries(s.queries || []);
+        setUsername(s.username || "");
+        setMessage(s.message || "");
+      } catch {}
+    }
+  }, []);
 
   const fetchMyQueries = async () => {
     await fetchQueries(`${SERVER_URL}/tweet-fetch/my-queries?limit=50`);
@@ -72,7 +85,8 @@ export default function QueryHistory() {
   };
 
   const openQueryResults = (queryId) => {
-    navigate(`/query-results/${queryId}`);
+    sessionStorage.setItem("query_history_state", JSON.stringify({ queries, username, message }));
+    navigate(`/query-results/${queryId}?from=query-history`);
   };
 
   return (

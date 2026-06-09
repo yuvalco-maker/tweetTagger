@@ -160,7 +160,7 @@ export default function MyActivity() {
                   <button
                     key={q._id}
                     className={styles.queryCard}
-                    onClick={() => navigate(`/query-results/${q._id}`)}
+                    onClick={() => navigate(`/query-results/${q._id}?from=my-activity`)}
                   >
                     <div className={styles.queryTop}>
                       <strong>{q.keywords?.join(", ") || "No keywords"}</strong>

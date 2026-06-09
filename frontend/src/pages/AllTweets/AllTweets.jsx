@@ -14,7 +14,10 @@ export default function AllTweets() {
 
   const [tweets, setTweets] = useState([]);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(() => {
+    const saved = sessionStorage.getItem("scroll_alltweets");
+    return saved ? (JSON.parse(saved).page ?? 1) : 1;
+  });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -38,6 +41,7 @@ export default function AllTweets() {
 
       setTotal(data.total);
       setTweets(data.tweets);
+
     } catch {
       setMessage("Could not connect to the server.");
     } finally {
@@ -46,6 +50,17 @@ export default function AllTweets() {
   }, [navigate]);
 
   useEffect(() => { fetchPage(page); }, [page, fetchPage]);
+
+  // Restore scroll after data renders
+  useEffect(() => {
+    if (loading || tweets.length === 0) return;
+    const saved = sessionStorage.getItem("scroll_alltweets");
+    if (saved) {
+      const { scrollY } = JSON.parse(saved);
+      sessionStorage.removeItem("scroll_alltweets");
+      if (scrollY) window.scrollTo(0, scrollY);
+    }
+  }, [loading, tweets]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -85,7 +100,10 @@ export default function AllTweets() {
             tweet={tweet}
             onClick={
               tweet.tweet_id
-                ? () => navigate(`/tweet-detail/${tweet.tweet_id}`)
+                ? () => {
+                    sessionStorage.setItem("scroll_alltweets", JSON.stringify({ page, scrollY: window.scrollY }));
+                    navigate(`/tweet-detail/${tweet.tweet_id}`);
+                  }
                 : undefined
             }
           />

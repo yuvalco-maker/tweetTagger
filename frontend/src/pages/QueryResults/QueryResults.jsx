@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import TaggedTweetCard from "../../components/TaggedTweetCard/TaggedTweetCard.jsx";
 import TweetMap from "../../components/TweetMap/TweetMap.jsx";
 import styles from "./QueryResults.module.css";
@@ -17,6 +17,9 @@ function dangerLabel(value) {
 export default function QueryResults() {
   const { queryId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const fromMap = { "my-activity": "/my-activity", "query-history": "/query-history" };
+  const backTo = fromMap[searchParams.get("from")] ?? "/home";
 
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,6 +64,17 @@ export default function QueryResults() {
     fetchQueue();
   }, [queryId, navigate]);
 
+  // Restore scroll position when returning from tweet detail
+  useEffect(() => {
+    if (loading || tweets.length === 0) return;
+    const key = `scroll_qr_${queryId}`;
+    const saved = sessionStorage.getItem(key);
+    if (saved) {
+      sessionStorage.removeItem(key);
+      window.scrollTo(0, parseInt(saved, 10));
+    }
+  }, [loading, tweets, queryId]);
+
   if (loading) {
     return <div className={styles.page}>Loading tweets...</div>;
   }
@@ -69,8 +83,8 @@ export default function QueryResults() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div className={styles.headerActions}>
-          <button className={styles.backButton} onClick={() => navigate("/home")}>
-            ← Back to search
+          <button className={styles.backButton} onClick={() => navigate(backTo)}>
+            ← Back
           </button>
           <button className={styles.aiButton} onClick={() => navigate(`/ai-summary/${queryId}`)}>
             AI Summary
@@ -85,7 +99,7 @@ export default function QueryResults() {
       {/* Threat Location Map */}
       {(() => {
         const allLocations = tweets.flatMap((t) =>
-          Array.isArray(t.coordinates)
+          Array.isArray(t.coordinates) && t.is_dangerous !== false
             ? t.coordinates.map((c) => ({
                 ...c,
                 category: t.category || null,
@@ -123,7 +137,7 @@ export default function QueryResults() {
                     <div
                       key={item._id}
                       className={styles.queueCard}
-                      onClick={() => item.tweet_id && navigate(`/tweet-detail/${item.tweet_id}`)}
+                      onClick={() => { if (item.tweet_id) { sessionStorage.setItem(`scroll_qr_${queryId}`, String(window.scrollY)); navigate(`/tweet-detail/${item.tweet_id}`); } }}
                       style={item.tweet_id ? { cursor: "pointer" } : undefined}
                     >
                       <div className={styles.queueCardTop}>
@@ -151,7 +165,7 @@ export default function QueryResults() {
           <TaggedTweetCard
             key={tweet._id || tweet.tweet_id}
             tweet={tweet}
-            onClick={tweet.tweet_id ? () => navigate(`/tweet-detail/${tweet.tweet_id}`) : undefined}
+            onClick={tweet.tweet_id ? () => { sessionStorage.setItem(`scroll_qr_${queryId}`, String(window.scrollY)); navigate(`/tweet-detail/${tweet.tweet_id}`); } : undefined}
           />
         ))}
       </div>

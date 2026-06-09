@@ -24,6 +24,7 @@ export default function SearchQuery() {
   const paramKeywords = searchParams.get("keywords");
   const paramStart    = searchParams.get("start_date");
   const paramEnd      = searchParams.get("end_date");
+  const backTo = searchParams.get("from") === "entity-explorer" ? "/entity-explorer" : "/home";
 
   const [keywords, setKeywords] = useState(
     paramKeywords ? paramKeywords.split(" ").filter(Boolean) : [""]
@@ -153,8 +154,8 @@ export default function SearchQuery() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <button className={styles.backButton} onClick={() => navigate("/home")}>
-          ← Back home
+        <button className={styles.backButton} onClick={() => navigate(backTo)}>
+          ← Back
         </button>
         <div style={{ float: "right", display: "flex", gap: "8px" }}>
           <button

@@ -438,6 +438,43 @@ async def get_all_users():
     return users
 
 
+async def get_all_users_stats():
+    query_stats: dict[str, dict] = {}
+    async for doc in tweet_search_queries_collection.aggregate([
+        {"$group": {
+            "_id": "$requested_by",
+            "total_queries": {"$sum": 1},
+            "total_fetched": {"$sum": "$inserted_count"},
+        }}
+    ]):
+        query_stats[doc["_id"]] = {
+            "total_queries": doc["total_queries"],
+            "total_fetched": doc["total_fetched"],
+        }
+
+    edit_stats: dict[str, int] = {}
+    async for doc in processed_collection.aggregate([
+        {"$match": {"edited": True}},
+        {"$group": {"_id": "$tagged_by", "total_edits": {"$sum": 1}}},
+    ]):
+        edit_stats[doc["_id"]] = doc["total_edits"]
+
+    result = []
+    async for user in users_collection.find({}, {"password": 0}):
+        uid = str(user["_id"])
+        q = query_stats.get(uid, {"total_queries": 0, "total_fetched": 0})
+        result.append({
+            "_id": uid,
+            "username": user.get("username"),
+            "email": user.get("email"),
+            "isADMIN": bool(user.get("isADMIN", False)),
+            "total_queries": q["total_queries"],
+            "total_fetched": q["total_fetched"],
+            "total_edits": edit_stats.get(uid, 0),
+        })
+    return result
+
+
 async def promote_user(user_id: str, current_user: dict):
     if not current_user.get("isADMIN"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin only")

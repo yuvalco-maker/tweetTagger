@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ReactFlow,
@@ -103,6 +103,42 @@ export default function EntityExplorer() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const pendingScrollRef = useRef(null);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("entity_explorer_state");
+    if (!saved) return;
+    sessionStorage.removeItem("entity_explorer_state");
+    try {
+      const s = JSON.parse(saved);
+      setQuery(s.query || "");
+      if (s.data) {
+        setData(s.data);
+        const { flowNodes, flowEdges } = buildFlowElements(s.data.nodes, s.data.edges);
+        setNodes(flowNodes);
+        setEdges(flowEdges);
+        if (s.scrollY) pendingScrollRef.current = s.scrollY;
+      }
+    } catch {}
+  }, [setNodes, setEdges]);
+
+  useEffect(() => {
+    if (data && pendingScrollRef.current !== null) {
+      const scrollY = pendingScrollRef.current;
+      pendingScrollRef.current = null;
+      requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, scrollY)));
+    }
+  }, [data]);
+
+  const launchSearch = useCallback((url) => {
+    sessionStorage.setItem("entity_explorer_state", JSON.stringify({
+      query,
+      data,
+      scrollY: window.scrollY,
+    }));
+    navigate(url);
+  }, [query, data, navigate]);
 
   const handleSearch = useCallback(
     async (e) => {
@@ -291,8 +327,8 @@ export default function EntityExplorer() {
                       <button
                         className={styles.queryLaunch}
                         onClick={() =>
-                          navigate(
-                            `/search-query?keywords=${encodeURIComponent(vq.keywords.join(" "))}&start_date=${vq.start_date}&end_date=${vq.end_date}`,
+                          launchSearch(
+                            `/search-query?keywords=${encodeURIComponent(vq.keywords.join(" "))}&start_date=${vq.start_date}&end_date=${vq.end_date}&from=entity-explorer`,
                           )
                         }
                       >
@@ -329,8 +365,8 @@ export default function EntityExplorer() {
                       <button
                         className={styles.queryLaunch}
                         onClick={() =>
-                          navigate(
-                            `/search-query?keywords=${encodeURIComponent(sq.keywords.join(" "))}`,
+                          launchSearch(
+                            `/search-query?keywords=${encodeURIComponent(sq.keywords.join(" "))}&from=entity-explorer`,
                           )
                         }
                       >
