@@ -1,7 +1,7 @@
 import os
 import math
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from apify_client import ApifyClient
 from dotenv import load_dotenv
@@ -238,6 +238,16 @@ async def fetch_tweets_from_apify(
         except Exception:
             continue
 
+        if request.start_date:
+            start_dt = datetime.fromisoformat(request.start_date).replace(tzinfo=timezone.utc)
+            if created_at_dt < start_dt:
+                continue
+
+        if request.end_date:
+            end_dt = datetime.fromisoformat(request.end_date).replace(tzinfo=timezone.utc) + timedelta(days=1)
+            if created_at_dt >= end_dt:
+                continue
+
         tweet_id = extract_tweet_id(item)
         url = extract_tweet_url(item)
         username, author_name = extract_author_info(item)
@@ -354,7 +364,7 @@ async def get_my_tweets_by_query(query_id: str):
 
 
 async def get_queries_by_username(username: str, limit: int = 50):
-    user = await users_collection.find_one({"username": username})
+    user = await users_collection.find_one({"username": {"$regex": f"^{username}$", "$options": "i"}})
 
     if not user:
         raise ValueError("User not found")

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./QueryHistory.module.css";
 
@@ -13,6 +13,9 @@ export default function QueryHistory() {
   const [queries, setQueries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const debounceRef = useRef(null);
+  const suggestionRef = useRef(null);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("query_history_state");
@@ -25,6 +28,32 @@ export default function QueryHistory() {
         setMessage(s.message || "");
       } catch {}
     }
+  }, []);
+
+  useEffect(() => {
+    if (!username.trim()) { setSuggestions([]); return; }
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(
+          `${SERVER_URL}/users/search?q=${encodeURIComponent(username.trim())}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (res.ok) setSuggestions(await res.json());
+      } catch {}
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [username]);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (suggestionRef.current && !suggestionRef.current.contains(e.target)) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
   const fetchMyQueries = async () => {
@@ -112,14 +141,33 @@ export default function QueryHistory() {
             My queries
           </button>
 
-          <div className={styles.searchBox}>
-            <input
-              className={styles.input}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Search by username"
-              disabled={loading}
-            />
+          <div className={styles.searchBox} ref={suggestionRef}>
+            <div className={styles.inputWrapper}>
+              <input
+                className={styles.input}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && fetchUserQueries()}
+                placeholder="Search by username"
+                disabled={loading}
+              />
+              {suggestions.length > 0 && (
+                <ul className={styles.suggestions}>
+                  {suggestions.map((name) => (
+                    <li
+                      key={name}
+                      className={styles.suggestionItem}
+                      onMouseDown={() => {
+                        setUsername(name);
+                        setSuggestions([]);
+                      }}
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <button
               className={styles.secondaryButton}

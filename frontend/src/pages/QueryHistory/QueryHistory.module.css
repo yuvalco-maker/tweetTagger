@@ -71,6 +71,46 @@
 .searchBox {
   display: flex;
   gap: 10px;
+  align-items: flex-start;
+}
+
+.inputWrapper {
+  position: relative;
+  flex: 1;
+}
+
+.inputWrapper .input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--card-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow-base);
+  overflow: hidden;
+}
+
+.suggestionItem {
+  padding: 9px 16px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.suggestionItem:hover {
+  background: var(--surface-2);
+  color: #1DA1F2;
 }
 
 .input {
