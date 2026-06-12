@@ -224,7 +224,12 @@ async def fetch_tweets_from_apify(
             detail=f"Failed to fetch tweets from Apify: {str(e)}",
         )
 
+    print(f"[fetch] Apify returned {len(items)} items for keywords={keywords}", flush=True)
+
     inserted_docs = []
+    skipped_date = 0
+    skipped_duplicate = 0
+    skipped_language = 0
 
     for item in items:
         text = item.get("text")
@@ -241,12 +246,15 @@ async def fetch_tweets_from_apify(
         if request.start_date:
             start_dt = datetime.fromisoformat(request.start_date).replace(tzinfo=timezone.utc)
             if created_at_dt < start_dt:
+                skipped_date += 1
                 continue
 
         if request.end_date:
             end_dt = datetime.fromisoformat(request.end_date).replace(tzinfo=timezone.utc) + timedelta(days=1)
             if created_at_dt >= end_dt:
+                skipped_date += 1
                 continue
+
 
         tweet_id = extract_tweet_id(item)
         url = extract_tweet_url(item)
@@ -280,11 +288,14 @@ async def fetch_tweets_from_apify(
         if tweet_id:
             existing = await tweets_collection.find_one({"tweet_id": tweet_id})
             if existing:
+                skipped_duplicate += 1
                 continue
 
         result = await tweets_collection.insert_one(doc)
         doc["_id"] = str(result.inserted_id)
         inserted_docs.append(doc)
+
+    print(f"[fetch] inserted={len(inserted_docs)}, skipped_date={skipped_date}, skipped_duplicate={skipped_duplicate}, skipped_language={skipped_language}", flush=True)
 
     ml_results = await predict_tweets_by_query(query_id)
     query_stats = await build_query_stats(query_id)

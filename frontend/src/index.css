@@ -92,6 +92,7 @@
 
 /* === Dark mode overrides (applied by ThemeToggle via body.dark) === */
 body.dark {
+  color-scheme: dark;
   --body-gradient: radial-gradient(ellipse 140% 65% at 50% -8%, rgba(29, 161, 242, 0.22) 0%, transparent 55%);
   --dot-color: rgba(255, 255, 255, 0.03);
 
@@ -123,6 +124,11 @@ body.dark {
   --nav-bg: #060d18;
   --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.32);
   --shadow-pop: 0 16px 44px rgba(0, 0, 0, 0.52);
+}
+
+body.dark select option {
+  background-color: #0f1930;
+  color: #ffffff;
 }
 
 /* === Base reset === */

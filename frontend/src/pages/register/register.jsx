@@ -72,7 +72,7 @@ export default function RegisterPage() {
         </div>
 
         <h1 className={styles['register-header']}>Create account</h1>
-        <p className={styles['register-subtitle']}>Join TweetTag today</p>
+        <p className={styles['register-subtitle']}>Join TweetTager today</p>
 
         <form onSubmit={(e) => { e.preventDefault(); handleAction(); }}>
           <div className={styles['fields']}>

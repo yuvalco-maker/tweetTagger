@@ -141,9 +141,10 @@ Tweets:
 {json.dumps(tweets, ensure_ascii=False)}
 """
 
-    response = _get_client().responses.create(
+    response = _get_client().chat.completions.create(
         model="gpt-5.5",
-        input=[
+        max_completion_tokens=8192,
+        messages=[
             {
                 "role": "system",
                 "content": "Return only valid JSON matching the provided schema.",
@@ -153,17 +154,17 @@ Tweets:
                 "content": prompt,
             },
         ],
-        text={
-            "format": {
-                "type": "json_schema",
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
                 "name": AI_SUMMARY_JSON_SCHEMA["name"],
                 "schema": AI_SUMMARY_JSON_SCHEMA["schema"],
                 "strict": True,
-            }
+            },
         },
     )
 
-    ai_data = json.loads(response.output_text)
+    ai_data = json.loads(response.choices[0].message.content)
 
     tweet_reviews = ai_data["tweet_reviews"]
 

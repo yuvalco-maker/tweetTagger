@@ -4,7 +4,8 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\yuvyu\\\\graduation project\\\\tweetTagger\" -Recurse -Directory)",
       "Bash(Select-Object -ExpandProperty FullName)",
       "PowerShell(head -30)",
-      "Bash(venv/Scripts/python.exe -c \"import pulp; print\\(pulp.__version__\\)\")"
+      "Bash(venv/Scripts/python.exe -c \"import pulp; print\\(pulp.__version__\\)\")",
+      "WebSearch"
     ]
   }
 }
