@@ -590,7 +590,7 @@ async def update_tweet(tweet, user_id: str | None = None):
     elif not edited_flag and was_edited:
         await model_stats_collection.update_one(
             {"_id": "singleton"},
-            {"$inc": {"edit_count": -1}},
+            [{"$set": {"edit_count": {"$max": [0, {"$subtract": ["$edit_count", 1]}]}}}],
             upsert=True,
         )
 

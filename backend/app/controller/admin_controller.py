@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
-from backend.app.db.database import model_stats_collection, processed_collection
+from backend.app.db.database import model_stats_collection
 from backend.app.dependencies.auth import get_current_user
 from backend.app.services.ml.trainer import run_retraining
 
@@ -25,20 +25,6 @@ async def _do_retrain():
         print("[admin] Calling run_retraining…", flush=True)
         metrics = await asyncio.to_thread(run_retraining)
         print(f"[admin] Retraining finished, metrics: {metrics}", flush=True)
-
-        # Reset all edited tweets — corrections are now the model's new baseline
-        await processed_collection.update_many(
-            {"edited": True},
-            [
-                {
-                    "$set": {
-                        "edited": False,
-                        "original_is_dangerous": "$is_dangerous",
-                        "original_category": "$category",
-                    }
-                }
-            ],
-        )
 
         await model_stats_collection.update_one(
             {"_id": MODEL_STATS_ID},

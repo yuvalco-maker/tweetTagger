@@ -336,7 +336,7 @@ def run_training() -> dict:
 def run_retraining() -> dict:
     """
     Same as run_training() but merges processed (phase I) + human-corrected
-    processed_phase_II before training.
+    processed_phase_II before training. Human corrections get 10x sample weight.
     """
     texts, danger_labels, category_labels = _load_all_tagged_tweets()
 
