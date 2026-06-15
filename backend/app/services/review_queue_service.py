@@ -2,7 +2,7 @@ from pulp import LpProblem, LpMinimize, LpVariable, lpSum, LpStatus, value
 
 from backend.app.db.database import processed_collection
 
-MAX_CANDIDATES = 15
+MAX_CANDIDATES_RATIO = 1 / 3
 CONFIDENCE_THRESHOLD = 0.75
 NO_REVIEW_UNCERTAINTY_THRESHOLD = 0.30  # avg uncertainty of top candidates to trigger review
 
@@ -31,6 +31,8 @@ async def get_review_queue(query_id: str) -> dict:
     if not tweets:
         return {"no_review": True, "reason": "No processed tweets found for this query.", "queue": []}
 
+    max_candidates = max(1, int(len(tweets) * MAX_CANDIDATES_RATIO))
+
     dangerous = [t for t in tweets if t.get("is_dangerous") is True]
     safe = [t for t in tweets if t.get("is_dangerous") is not True]
 
@@ -39,13 +41,13 @@ async def get_review_queue(query_id: str) -> dict:
 
     # Build candidate pool
     candidates = list(dangerous)
-    remaining_slots = MAX_CANDIDATES - len(candidates)
+    remaining_slots = max_candidates - len(candidates)
     if remaining_slots > 0:
         candidates += safe_sorted[:remaining_slots]
 
     # No review check: zero dangerous AND top candidates not uncertain enough
     if not dangerous:
-        top = safe_sorted[:MAX_CANDIDATES]
+        top = safe_sorted[:max_candidates]
         if top:
             avg_uncertainty = sum(_uncertainty(t) for t in top) / len(top)
             if avg_uncertainty < NO_REVIEW_UNCERTAINTY_THRESHOLD:
