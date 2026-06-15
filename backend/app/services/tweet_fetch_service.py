@@ -202,13 +202,19 @@ async def fetch_tweets_from_apify(
     query_result = await tweet_search_queries_collection.insert_one(query_doc)
     query_id = str(query_result.inserted_id)
 
+    date_suffix = ""
+    if request.start_date:
+        date_suffix += f" since:{request.start_date}"
+    if request.end_date:
+        date_suffix += f" until:{request.end_date}"
+
+    search_terms_with_dates = [kw + date_suffix for kw in keywords]
+
     run_input = {
-        "searchTerms": keywords,
+        "searchTerms": search_terms_with_dates,
         "maxItems": request.max_items,
         "sort": "Latest",
         "tweetLanguage": request.language,
-        "startDate": request.start_date,
-        "endDate": request.end_date,
     }
 
     try:
